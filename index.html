@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>filmORG - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-lavender: #7761A9;
+            --dark-slate-blue: #7761A9;
+            --pearl-bush: #DEDEDE;
+            --lapis-blue: #25336E;
+            --midnight: #130F3A;
+            --seafoam-blue: #72CBD7;
+            --lavender-purple: #8474B7;
+            
+            --background: var(--pearl-bush);
+            --text-primary: var(--midnight);
+            --text-secondary: var(--lapis-blue);
+            --accent: var(--seafoam-blue);
+            --secondary-accent: var(--lavender-purple);
+            
+            --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .message {
+            position: absolute;
+            top: -60px;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .message.error {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+
+        .message.success {
+            background-color: #dcfce7;
+            color: #16a34a;
+        }
+
+        .message.show {
+            opacity: 1;
+        }
+
+        .auth-logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--midnight);
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        .auth-logo span {
+            color: var(--accent);
+        }
+
+        .auth-form {
+            text-align: left;
+        }
+
+        .auth-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        .auth-footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .auth-link {
+            color: var(--accent);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .auth-link:hover {
+            text-decoration: underline;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: var(--radius);
+            border: 1px solid #e0e0e0;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(114, 203, 215, 0.1);
+        }
+
+        .btn {
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            outline: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--midnight);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: #5fb2bd;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--midnight);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div id="message" class="message"></div>
+            <div class="auth-logo">film<span>ORG</span></div>
+            <h2 class="auth-title">Faça login na sua conta</h2>
+            
+            <form class="auth-form" id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input 
+                        type="email" 
+                        class="form-control" 
+                        id="login-email" 
+                        placeholder="seu@email.com" 
+                        required
+                        autocomplete="email"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Senha</label>
+                    <input 
+                        type="password" 
+                        class="form-control" 
+                        id="login-password" 
+                        placeholder="Sua senha" 
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
+                
+                <div class="form-group" style="text-align: right;">
+                    <a href="#" class="auth-link">Esqueceu sua senha?</a>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block" id="login-btn">
+                    <span>Entrar</span>
+                    <div class="loading-spinner"></div>
+                </button>
+            </form>
+            
+            <div class="auth-footer">
+                Ainda não tem uma conta? <a href="signup.html" class="auth-link">Criar conta</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const loginBtn = document.getElementById('login-btn');
+            const spinner = document.querySelector('.loading-spinner');
+            const messageDiv = document.getElementById('message');
+
+            // Função para mostrar mensagens
+            function showMessage(text, type) {
+                messageDiv.textContent = text;
+                messageDiv.className = `message ${type} show`;
+                setTimeout(() => {
+                    messageDiv.className = 'message';
+                }, 3000);
+            }
+
+            // Função para validar email
+            function isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            // Gerenciar o estado de loading
+            function setLoading(loading) {
+                loginBtn.disabled = loading;
+                spinner.style.display = loading ? 'block' : 'none';
+                loginBtn.querySelector('span').style.display = loading ? 'none' : 'block';
+            }
+
+            // Mock de usuários para teste
+            const mockUsers = [
+                { email: 'teste@teste.com', password: '123456' }
+            ];
+
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('login-email').value.trim();
+                const password = document.getElementById('login-password').value.trim();
+
+                // Validações
+                if (!email || !password) {
+                    showMessage('Preencha todos os campos', 'error');
+                    return;
+                }
+
+                if (!isValidEmail(email)) {
+                    showMessage('Email inválido', 'error');
+                    return;
+                }
+
+                setLoading(true);
+
+                try {
+                    // Simular delay de rede
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
+                    // Verificar credenciais
+                    const user = mockUsers.find(u => u.email === email && u.password === password);
+
+                    if (user) {
+                        // Login bem sucedido
+                        localStorage.setItem('userLoggedIn', 'true');
+                        localStorage.setItem('userEmail', email);
+                        
+                        showMessage('Login realizado com sucesso!', 'success');
+                        
+                        // Redirecionar após mostrar mensagem de sucesso
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1000);
+                    } else {
+                        showMessage('Email ou senha incorretos', 'error');
+                    }
+                } catch (error) {
+                    showMessage('Erro ao fazer login. Tente novamente.', 'error');
+                } finally {
+                    setLoading(false);
+                }
+            });
+
+            // Verificar se usuário já está logado
+            if (localStorage.getItem('userLoggedIn') === 'true') {
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>filmORG - Criar Conta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-lavender: #7761A9;
+            --dark-slate-blue: #7761A9;
+            --pearl-bush: #DEDEDE;
+            --lapis-blue: #25336E;
+            --midnight: #130F3A;
+            --seafoam-blue: #72CBD7;
+            --lavender-purple: #8474B7;
+            
+            --background: var(--pearl-bush);
+            --text-primary: var(--midnight);
+            --text-secondary: var(--lapis-blue);
+            --accent: var(--seafoam-blue);
+            --secondary-accent: var(--lavender-purple);
+            
+            --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .message {
+            position: absolute;
+            top: -60px;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .message.error {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+
+        .message.success {
+            background-color: #dcfce7;
+            color: #16a34a;
+        }
+
+        .message.show {
+            opacity: 1;
+        }
+
+        .auth-logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--midnight);
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        .auth-logo span {
+            color: var(--accent);
+        }
+
+        .auth-form {
+            text-align: left;
+        }
+
+        .auth-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        .auth-footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .auth-link {
+            color: var(--accent);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .auth-link:hover {
+            text-decoration: underline;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: var(--radius);
+            border: 1px solid #e0e0e0;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(114, 203, 215, 0.1);
+        }
+
+        .form-control.error {
+            border-color: #dc2626;
+        }
+
+        .validation-message {
+            position: absolute;
+            bottom: -18px;
+            left: 0;
+            font-size: 12px;
+            color: #dc2626;
+        }
+
+        .password-requirements {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+            padding-left: 12px;
+        }
+
+        .password-requirements ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .password-requirements li {
+            margin: 2px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-requirements li::before {
+            content: "•";
+            color: #9CA3AF;
+            margin-right: 5px;
+        }
+
+        .password-requirements li.valid::before {
+            content: "✓";
+            color: #16a34a;
+        }
+
+        .btn {
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            outline: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--midnight);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: #5fb2bd;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--midnight);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div id="message" class="message"></div>
+            <div class="auth-logo">film<span>ORG</span></div>
+            <h2 class="auth-title">Crie sua conta</h2>
+            
+            <form class="auth-form" id="signupForm">
+                <div class="form-group">
+                    <label class="form-label">Nome completo</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="signup-name" 
+                        placeholder="Seu nome completo" 
+                        required
+                        minlength="3"
+                    >
+                    <span class="validation-message" id="name-validation"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input 
+                        type="email" 
+                        class="form-control" 
+                        id="signup-email" 
+                        placeholder="seu@email.com" 
+                        required
+                    >
+                    <span class="validation-message" id="email-validation"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Senha</label>
+                    <input 
+                        type="password" 
+                        class="form-control" 
+                        id="signup-password" 
+                        placeholder="Crie uma senha forte" 
+                        required
+                    >
+                    <div class="password-requirements">
+                        <ul id="password-requirements-list">
+                            <li data-requirement="length">Mínimo de 8 caracteres</li>
+                            <li data-requirement="uppercase">Uma letra maiúscula</li>
+                            <li data-requirement="lowercase">Uma letra minúscula</li>
+                            <li data-requirement="number">Um número</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Confirmar Senha</label>
+                    <input 
+                        type="password" 
+                        class="form-control" 
+                        id="signup-confirm-password" 
+                        placeholder="Confirme sua senha" 
+                        required
+                    >
+                    <span class="validation-message" id="confirm-password-validation"></span>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block" id="signup-btn">
+                    <span>Criar Conta</span>
+                    <div class="loading-spinner"></div>
+                </button>
+            </form>
+            
+            <div class="auth-footer">
+                Já tem uma conta? <a href="index.html" class="auth-link">Fazer login</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const signupForm = document.getElementById('signupForm');
+            const signupBtn = document.getElementById('signup-btn');
+            const spinner = document.querySelector('.loading-spinner');
+            const messageDiv = document.getElementById('message');
+            const passwordInput = document.getElementById('signup-password');
+            const confirmPasswordInput = document.getElementById('signup-confirm-password');
+            const requirementsList = document.getElementById('password-requirements-list');
+
+            // Função para mostrar mensagens
+            function showMessage(text, type) {
+                messageDiv.textContent = text;
+                messageDiv.className = `message ${type} show`;
+                setTimeout(() => {
+                    messageDiv.className = 'message';
+                }, 3000);
+            }
+
+            // Função para validar email
+            function isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            // Função para validar senha
+            function validatePassword(password) {
+                const requirements = {
+                    length: password.length >= 8,
+                    uppercase: /[A-Z]/.test(password),
+                    lowercase: /[a-z]/.test(password),
+                    number: /[0-9]/.test(password)
+                };
+
+                // Atualizar lista de requisitos visualmente
+                Object.entries(requirements).forEach(([requirement, valid]) => {
+                    const li = requirementsList.querySelector(`[data-requirement="${requirement}"]`);
+                    if (li) {
+                        li.className = valid ? 'valid' : '';
+                    }
+                });
+
+                return Object.values(requirements).every(Boolean);
+            }
+
+            // Gerenciar o estado de loading
+            function setLoading(loading) {
+                signupBtn.disabled = loading;
+                spinner.style.display = loading ? 'block' : 'none';
+                signupBtn.querySelector('span').style.display = loading ? 'none' : 'block';
+            }
+
+            // Validar senha em tempo real
+            passwordInput.addEventListener('input', function() {
+                validatePassword(this.value);
+            });
+
+            // Validar confirmação de senha
+            confirmPasswordInput.addEventListener('input', function() {
+                const validation = document.getElementById('confirm-password-validation');
+                if (this.value && this.value !== passwordInput.value) {
+                    validation.textContent = 'As senhas não coincidem';
+                    this.classList.add('error');
+                } else {
+                    validation.textContent = '';
+                    this.classList.remove('error');
+                }
+            });
+
+            signupForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('signup-name').value.trim();
+                const email = document.getElementById('signup-email').value.trim();
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+
+                // Validações
+                if (!name || !email || !password || !confirmPassword) {
+                    showMessage('Preencha todos os campos', 'error');
+                    return;
+                }
+
+                if (name.length < 3) {
+                    showMessage('Nome deve ter pelo menos 3 caracteres', 'error');
+                    return;
+                }
+
+                if (!isValidEmail(email)) {
+                    showMessage('Email inválido', 'error');
+                    return;
+                }
+
+                if (!validatePassword(password)) {
+                    showMessage('Senha não atende aos requisitos mínimos', 'error');
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    showMessage('As senhas não coincidem', 'error');
+                    return;
+                }
+
+                setLoading(true);
+
+                try {
+                    // Simular delay de rede
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
+                    // Simular registro de usuário
+                    const users = JSON.parse(localStorage.getItem('users') || '[]');
+                    
+                    // Verificar se email já existe
+                    if (users.some(user => user.email === email)) {
+                        showMessage('Este email já está cadastrado', 'error');
+                        return;
+                    }
+
+                    // Adicionar novo usuário
+                    users.push({
+                        name,
+                        email,
+                        password // Em produção, deve-se usar hash da senha
+                    });
+
+                    localStorage.setItem('users', JSON.stringify(users));
+                    
+                    showMessage('Conta criada com sucesso!', 'success');
+                    
+                    // Redirecionar após mostrar mensagem de sucesso
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } catch (error) {
+                    showMessage('Erro ao criar conta. Tente novamente.', 'error');
+                } finally {
+                    setLoading(false);
+                }
+            });
+
+            // Verificar se usuário já está logado
+            if (localStorage.getItem('userLoggedIn') === 'true') {
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>

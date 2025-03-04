@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>filmORG - Dashboard 2030</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Ícones modernos -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Cores Base - Esquema Futurista */
+            --deep-space: #1A1B2E;
+            --neon-blue: #00F5FF;
+            --neon-purple: #B15EFF;
+            --cyber-green: #00FFB2;
+            --soft-white: #F4F7FF;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            
+            /* Gradientes */
+            --gradient-primary: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            --gradient-success: linear-gradient(135deg, var(--cyber-green), var(--neon-blue));
+            
+            /* Efeitos */
+            --glass-blur: blur(10px);
+            --neon-shadow: 0 0 15px rgba(0, 245, 255, 0.5);
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            
+            /* Dimensões */
+            --sidebar-width: 80px;
+            --sidebar-width-expanded: 240px;
+            --header-height: 70px;
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--deep-space);
+            color: var(--soft-white);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 245, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(177, 94, 255, 0.1) 0%, transparent 20%);
+            background-attachment: fixed;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-right: 1px solid var(--glass-border);
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar:hover {
+            width: var(--sidebar-width-expanded);
+        }
+
+        .sidebar-logo {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: var(--header-height);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            margin-left: 15px;
+            font-size: 20px;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar:hover .logo-text {
+            opacity: 1;
+        }
+
+        .sidebar-menu {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--soft-white);
+            text-decoration: none;
+        }
+
+        .menu-item:hover {
+            background: var(--glass-bg);
+        }
+
+        .menu-item.active {
+            background: var(--gradient-primary);
+            box-shadow: var(--neon-shadow);
+        }
+
+        .menu-icon {
+            font-size: 20px;
+            min-width: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-text {
+            margin-left: 15px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar:hover .menu-text {
+            opacity: 1;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            min-height: 100vh;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Header */
+        .header {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--glass-bg);
+            border-radius: 20px;
+            padding: 8px 15px;
+            width: 300px;
+        }
+
+        .search-bar input {
+            background: none;
+            border: none;
+            color: var(--soft-white);
+            margin-left: 10px;
+            flex: 1;
+            outline: none;
+        }
+
+        .search-bar input::placeholder {
+            color: rgba(244, 247, 255, 0.5);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-btn {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--neon-purple);
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-info h3 {
+            font-size: 14px;
+            color: rgba(244, 247, 255, 0.7);
+            margin-bottom: 5px;
+        }
+
+        .stat-info .value {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        /* Project Cards */
+        .projects-section, .team-section, .calendar-section, .equipment-section, .ai-section {
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .section-action {
+            color: var(--neon-blue);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .section-action:hover {
+            text-decoration: underline;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .project-card {
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--neon-shadow);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .project-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .project-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: rgba(0, 255, 178, 0.2);
+            color: var(--cyber-green);
+        }
+
+        .status-planning {
+            background: rgba(0, 245, 255, 0.2);
+            color: var(--neon-blue);
+        }
+
+        .status-completed {
+            background: rgba(177, 94, 255, 0.2);
+            color: var(--neon-purple);
+        }
+
+        .project-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: rgba(244, 247, 255, 0.7);
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(244, 247, 255, 0.1);
+            border-radius: 3px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-value {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        /* Equipe */
+        .team-members {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .member-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: -8px;
+            border: 2px solid var(--deep-space);
+        }
+
+        .member-avatar:first-child {
+            margin-left: 0;
+        }
+
+        /* Calendário */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .calendar-day {
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            padding: 10px;
+            min-height: 100px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .calendar-day-header {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .calendar-day.today {
+            border: 1px solid var(--neon-blue);
+        }
+
+        .calendar-day.has-events {
+            position: relative;
+        }
+
+        .calendar-day.has-events::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--neon-blue);
+        }
+
+        .calendar-event {
+            font-size: 12px;
+            padding: 5px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background: rgba(0, 245, 255, 0.1);
+        }
+
+        /* Equipamentos */
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .equipment-card {
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .equipment-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .equipment-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 245, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 15px;
+        }
+
+        .equipment-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .equipment-status {
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-top: 5px;
+        }
+
+        /* AI Assistant */
+        .ai-card {
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            gap: 20px;
+        }
+
+        .ai-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            flex-shrink: 0;
+        }
+
+        .ai-content {
+            flex: 1;
+        }
+
+        .ai-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--neon-blue);
+        }
+
+        .ai-description {
+            font-size: 14px;
+            color: rgba(244, 247, 255, 0.7);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .ai-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .ai-suggestion {
+            background: rgba(0, 245, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .ai-suggestion:hover {
+            background: rgba(0, 245, 255, 0.2);
+        }
+
+        /* Botões */
+        .btn {
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--soft-white);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+        }
+
+        /* Animações */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+            }
+
+            .sidebar:hover, .sidebar.show {
+                width: var(--sidebar-width-expanded);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .calendar-day:nth-child(n+4) {
+                display: none;
+            }
+
+            .equipment-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .search-bar {
+                width: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calendar-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-day:nth-child(n+2) {
+                display: none;
+            }
+
+            .equipment-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ai-card {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon">F</div>
+            <div class="logo-text">filmORG</div>
+        </div>
+        
+        <nav class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item active">
+                <i class="menu-icon ri-dashboard-line"></i>
+                <span class="menu-text">Dashboard</span>
+            </a>
+            <a href="projetos.html" class="menu-item">
+                <i class="menu-icon ri-movie-line"></i>
+                <span class="menu-text">Projetos</span>
+            </a>
+            <a href="equipe.html" class="menu-item">
+                <i class="menu-icon ri-team-line"></i>
+                <span class="menu-text">Equipe</span>
+            </a>
+            <a href="equipamentos.html" class="menu-item">
+                <i class="menu-icon ri-camera-line"></i>
+                <span class="menu-text">Equipamentos</span>
+            </a>
+            <a href="ai-assist.html" class="menu-item">
+                <i class="menu-icon ri-robot-line"></i>
+                <span class="menu-text">AI Assist</span>
+            </a>
+            <a href="analytics.html" class="menu-item">
+                <i class="menu-icon ri-bar-chart-line"></i>
+                <span class="menu-text">Analytics</span>
+            </a>
+            <a href="agenda.html" class="menu-item">
+                <i class="menu-icon ri-calendar-line"></i>
+                <span class="menu-text">Agenda</span>
+            </a>
+            <a href="orcamento.html" class="menu-item">
+                <i class="menu-icon ri-money-dollar-circle-line"></i>
+                <span class="menu-text">Orçamento</span>
+            </a>
+            <a href="configuracoes.html" class="menu-item" style="margin-top: auto;">
+                <i class="menu-icon ri-settings-line"></i>
+                <span class="menu-text">Configurações</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h1 class="page-title">Dashboard</h1>
+            
+            <div class="search-bar">
+                <i class="ri-search-line"></i>
+                <input type="text" placeholder="Buscar..." id="search-input">
+            </div>
+            
+            <div class="header-actions">
+                <div class="notification-btn">
+                    <i class="ri-notification-3-line"></i>
+                    <div class="notification-badge">3</div>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar" id="user-initial">U</div>
+                    <span class="user-name" id="user-name">Usuário</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Cards de estatísticas -->
+        <div class="cards-grid">
+            <div class="card stat-card">
+                <div class="stat-info">
+                    <h3>Projetos Ativos</h3>
+                    <div class="value" id="active-projects">0</div>
+                </div>
+                <div class="stat-icon" style="background: rgba(0, 245, 255, 0.2); color: var(--neon-blue);">
+                    <i class="ri-movie-line"></i>
+                </div>
+            </div>
+            
+            <div class="card stat-card">
+                <div class="stat-info">
+                    <h3>Equipamentos</h3>
+                    <div class="value" id="total-equipment">0</div>
+                </div>
+                <div class="stat-icon" style="background: rgba(0, 255, 178, 0.2); color: var(--cyber-green);">
+                    <i class="ri-camera-line"></i>
+                </div>
+            </div>
+            
+            <div class="card stat-card">
+                <div class="stat-info">
+                    <h3>Eventos Hoje</h3>
+                    <div class="value" id="today-events">0</div>
+                </div>
+                <div class="stat-icon" style="background: rgba(177, 94, 255, 0.2); color: var(--neon-purple);">
+                    <i class="ri-calendar-line"></i>
+                </div>
+            </div>
+            
+            <div class="card stat-card">
+                <div class="stat-info">
+                    <h3>Tarefas Pendentes</h3>
+                    <div class="value" id="pending-tasks">0</div>
+                </div>
+                <div class="stat-icon" style="background: rgba(255, 100, 100, 0.2); color: rgb(255, 100, 100);">
+                    <i class="ri-task-line"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Projetos em destaque -->
+        <div class="projects-section">
+            <div class="section-header">
+                <h2 class="section-title">Projetos em Destaque</h2>
+                <a href="projetos.html" class="section-action">
+                    Ver todos <i class="ri-arrow-right-line"></i>
+                </a>
+            </div>
+            
+            <div class="project-grid" id="project-grid">
+                <!-- Projetos serão carregados dinamicamente -->
+            </div>
+        </div>
+        
+        <!-- Calendário da semana -->
+        <div class="calendar-section">
+            <div class="section-header">
+                <h2 class="section-title">Próximos Eventos</h2>
+                <a href="agenda.html" class="section-action">
+                    Ver agenda completa <i class="ri-arrow-right-line"></i>
+                </a>
+            </div>
+            
+            <div class="calendar-grid" id="calendar-grid">
+                <!-- Calendário será carregado dinamicamente -->
+            </div>
+        </div>
+        
+        <!-- Equipamentos -->
+        <div class="equipment-section">
+            <div class="section-header">
+                <h2 class="section-title">Equipamentos Recentes</h2>
+                <a href="equipamentos.html" class="section-action">
+                    Ver todos <i class="ri-arrow-right-line"></i>
+                </a>
+            </div>
+            
+            <div class="equipment-grid" id="equipment-grid">
+                <!-- Equipamentos serão carregados dinamicamente -->
+            </div>
+        </div>
+        
+        <!-- Assistente AI -->
+        <div class="ai-section">
+            <div class="section-header">
+                <h2 class="section-title">Assistente AI</h2>
+                <a href="ai-assist.html" class="section-action">
+                    Conversar <i class="ri-arrow-right-line"></i>
+                </a>
+            </div>
+            
+            <div class="ai-card">
+                <div class="ai-avatar">
+                    <i class="ri-robot-line"></i>
+                </div>
+                <div class="ai-content">
+                    <h3 class="ai-title">Assistente de Produção</h3>
+                    <p class="ai-description">Olá! Estou aqui para ajudar com seus projetos. Aqui estão algumas sugestões com base em suas atividades recentes:</p>
+                    
+                    <div class="ai-suggestions">
+                        <div class="ai-suggestion" onclick="window.location.href='ai-assist.html'">Ideias criativas</div>
+                        <div class="ai-suggestion" onclick="window.location.href='ai-assist.html'">Otimização de cronograma</div>
+                        <div class="ai-suggestion" onclick="window.location.href='ai-assist.html'">Análise de orçamento</div>
+                        <div class="ai-suggestion" onclick="window.location.href='ai-assist.html'">Sugestões de equipamentos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos DOM
+            const projectGrid = document.getElementById('project-grid');
+            const calendarGrid = document.getElementById('calendar-grid');
+            const equipmentGrid = document.getElementById('equipment-grid');
+            const activeProjectsEl = document.getElementById('active-projects');
+            const totalEquipmentEl = document.getElementById('total-equipment');
+            const todayEventsEl = document.getElementById('today-events');
+            const pendingTasksEl = document.getElementById('pending-tasks');
+            const userInitialEl = document.getElementById('user-initial');
+            const userNameEl = document.getElementById('user-name');
+            
+            // Dados
+            let projects = JSON.parse(localStorage.getItem('projects')) || [];
+            let equipments = JSON.parse(localStorage.getItem('equipments')) || [];
+            
+            // Verificar usuário logado
+            const userEmail = localStorage.getItem('userEmail');
+            if (userEmail) {
+                const initial = userEmail.charAt(0).toUpperCase();
+                userInitialEl.textContent = initial;
+                
+                // Pegar nome do usuário, se disponível
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const user = users.find(u => u.email === userEmail);
+                if (user && user.name) {
+                    const firstName = user.name.split(' ')[0];
+                    userNameEl.textContent = firstName;
+                } else {
+                    userNameEl.textContent = userEmail.split('@')[0];
+                }
+            }
+            
+            // Atualizar estatísticas
+            function updateStats() {
+                // Projetos ativos
+                const activeProjects = projects.filter(p => p.status === 'active').length;
+                activeProjectsEl.textContent = activeProjects;
+                
+                // Total de equipamentos
+                totalEquipmentEl.textContent = equipments.length;
+                
+                // Eventos de hoje
+                // Simulando alguns eventos
+                todayEventsEl.textContent = Math.floor(Math.random() * 5);
+                
+                // Tarefas pendentes
+                // Simulando algumas tarefas
+                pendingTasksEl.textContent = Math.floor(Math.random() * 10 + 5);
+            }
+            
+            // Formatar data
+            function formatDate(dateString) {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                return date.toLocaleDateString('pt-BR');
+            }
+            
+            // Obter status em português
+            function getStatusLabel(status) {
+                switch (status) {
+                    case 'planning':
+                        return 'Em Planejamento';
+                    case 'active':
+                        return 'Em Andamento';
+                    case 'completed':
+                        return 'Concluído';
+                    default:
+                        return status;
+                }
+            }
+            
+            // Obter classe CSS para status
+            function getStatusClass(status) {
+                switch (status) {
+                    case 'planning':
+                        return 'status-planning';
+                    case 'active':
+                        return 'status-active';
+                    case 'completed':
+                        return 'status-completed';
+                    default:
+                        return '';
+                }
+            }
+            
+            // Obter ícone para tipo de equipamento
+            function getTypeIcon(type) {
+                switch (type) {
+                    case 'camera':
+                        return 'ri-camera-line';
+                    case 'lens':
+                        return 'ri-focus-3-line';
+                    case 'light':
+                        return 'ri-flashlight-line';
+                    case 'audio':
+                        return 'ri-mic-line';
+                    case 'accessory':
+                        return 'ri-tools-line';
+                    default:
+                        return 'ri-camera-line';
+                }
+            }
+            
+            // Carregar projetos em destaque
+            function loadFeaturedProjects() {
+                projectGrid.innerHTML = '';
+                
+                if (projects.length === 0) {
+                    projectGrid.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 30px;">
+                            <i class="ri-film-line" style="font-size: 48px; color: var(--neon-blue);"></i>
+                            <h3 style="margin: 15px 0;">Nenhum projeto encontrado</h3>
+                            <p style="margin-bottom: 20px;">Comece criando seu primeiro projeto</p>
+                            <button class="btn btn-primary" onclick="window.location.href='projetos.html'">
+                                <i class="ri-add-line"></i> Novo Projeto
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Mostrar apenas projetos ativos ou em planejamento, limitado a 3
+                const featuredProjects = projects
+                    .filter(p => p.status === 'active' || p.status === 'planning')
+                    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+                    .slice(0, 3);
+                
+                featuredProjects.forEach(project => {
+                    const projectCard = document.createElement('div');
+                    projectCard.className = 'project-card';
+                    projectCard.dataset.id = project.id;
+                    
+                    projectCard.innerHTML = `
+                        <div class="project-header">
+                            <span class="project-status ${getStatusClass(project.status)}">${getStatusLabel(project.status)}</span>
+                        </div>
+                        <h3 class="project-title">${project.title}</h3>
+                        <p style="font-size: 14px; color: rgba(244, 247, 255, 0.7); margin-bottom: 15px;">
+                            ${project.description.length > 100 ? project.description.substring(0, 100) + '...' : project.description}
+                        </p>
+                        <div class="progress-bar">
+                            <div class="progress-value" style="width: ${project.progress}%"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 14px; color: rgba(244, 247, 255, 0.7); margin-top: 5px;">
+                            <span>Progresso: ${project.progress}%</span>
+                            <span>${formatDate(project.startDate)} - ${formatDate(project.endDate)}</span>
+                        </div>
+                    `;
+                    
+                    projectCard.addEventListener('click', () => {
+                        window.location.href = `projetos.html?id=${project.id}`;
+                    });
+                    
+                    projectGrid.appendChild(projectCard);
+                });
+            }
+            
+            // Carregar calendário da semana
+            function loadCalendar() {
+                calendarGrid.innerHTML = '';
+                
+                const today = new Date();
+                const dayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+                
+                // Criar os próximos 7 dias
+                for (let i = 0; i < 7; i++) {
+                    const date = new Date(today);
+                    date.setDate(today.getDate() + i);
+                    
+                    const day = document.createElement('div');
+                    day.className = 'calendar-day';
+                    if (i === 0) day.classList.add('today');
+                    
+                    // Verificar se há eventos neste dia (simulado)
+                    const hasEvents = Math.random() > 0.5;
+                    if (hasEvents) day.classList.add('has-events');
+                    
+                    const dayHeader = document.createElement('div');
+                    dayHeader.className = 'calendar-day-header';
+                    dayHeader.textContent = `${dayNames[date.getDay()]} ${date.getDate()}/${date.getMonth() + 1}`;
+                    
+                    day.appendChild(dayHeader);
+                    
+                    // Adicionar eventos simulados
+                    if (hasEvents) {
+                        const eventTypes = ['Filmagem', 'Reunião', 'Edição', 'Entrevista', 'Locação'];
+                        const numEvents = Math.floor(Math.random() * 2) + 1;
+                        
+                        for (let j = 0; j < numEvents; j++) {
+                            const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
+                            const hours = Math.floor(Math.random() * 12) + 8;
+                            const minutes = ['00', '30'][Math.floor(Math.random() * 2)];
+                            
+                            const event = document.createElement('div');
+                            event.className = 'calendar-event';
+                            event.textContent = `${hours}:${minutes} - ${eventType}`;
+                            
+                            day.appendChild(event);
+                        }
+                    }
+                    
+                    calendarGrid.appendChild(day);
+                }
+            }
+            
+            // Carregar equipamentos recentes
+            function loadRecentEquipment() {
+                equipmentGrid.innerHTML = '';
+                
+                if (equipments.length === 0) {
+                    equipmentGrid.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 30px;">
+                            <i class="ri-camera-off-line" style="font-size: 48px; color: var(--neon-blue);"></i>
+                            <h3 style="margin: 15px 0;">Nenhum equipamento encontrado</h3>
+                            <p style="margin-bottom: 20px;">Comece cadastrando seu primeiro equipamento</p>
+                            <button class="btn btn-primary" onclick="window.location.href='equipamentos.html'">
+                                <i class="ri-add-line"></i> Novo Equipamento
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Mostrar apenas os equipamentos mais recentes, limitado a 4
+                const recentEquipment = equipments
+                    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                    .slice(0, 4);
+                
+                recentEquipment.forEach(equipment => {
+                    const equipmentCard = document.createElement('div');
+                    equipmentCard.className = 'equipment-card';
+                    equipmentCard.dataset.id = equipment.id;
+                    
+                    const statusClass = equipment.status === 'available' ? 'status-available' : 
+                                       equipment.status === 'in-use' ? 'status-in-use' : 
+                                       equipment.status === 'maintenance' ? 'status-maintenance' : 'status-unavailable';
+                    
+                    const statusLabel = equipment.status === 'available' ? 'Disponível' : 
+                                       equipment.status === 'in-use' ? 'Em Uso' : 
+                                       equipment.status === 'maintenance' ? 'Em Manutenção' : 'Indisponível';
+                    
+                    equipmentCard.innerHTML = `
+                        <div class="equipment-icon">
+                            <i class="${getTypeIcon(equipment.type)}"></i>
+                        </div>
+                        <h3 class="equipment-name">${equipment.name}</h3>
+                        <span class="equipment-status ${statusClass}">${statusLabel}</span>
+                    `;
+                    
+                    equipmentCard.addEventListener('click', () => {
+                        window.location.href = `equipamentos.html?id=${equipment.id}`;
+                    });
+                    
+                    equipmentGrid.appendChild(equipmentCard);
+                });
+            }
+            
+            // Inicialização
+            updateStats();
+            loadFeaturedProjects();
+            loadCalendar();
+            loadRecentEquipment();
+            
+            // Adicionar exemplo de projetos se não houver nenhum
+            if (projects.length === 0) {
+                const sampleProjects = [
+                    {
+                        id: Math.random().toString(36).substr(2, 9),
+                        title: 'Documentário "Vida Selvagem"',
+                        description: 'Documentário sobre a vida selvagem na Mata Atlântica. Filmagens em locais remotos e montagem em 4K.',
+                        status: 'active',
+                        startDate: '2023-03-10',
+                        endDate: '2023-06-30',
+                        progress: 65,
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    },
+                    {
+                        id: Math.random().toString(36).substr(2, 9),
+                        title: 'Ensaio Fotográfico "Urbano"',
+                        description: 'Ensaio fotográfico sobre a vida urbana e contrastes sociais nas grandes metrópoles.',
+                        status: 'planning',
+                        startDate: '2023-05-15',
+                        endDate: '2023-07-20',
+                        progress: 25,
+                        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                        updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+                    },
+                    {
+                        id: Math.random().toString(36).substr(2, 9),
+                        title: 'Comercial "Novo Produto XYZ"',
+                        description: 'Produção completa de comercial para TV e internet para lançamento do produto XYZ.',
+                        status: 'completed',
+                        startDate: '2023-01-05',
+                        endDate: '2023-02-28',
+                        progress: 100,
+                        createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+                        updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+                    }
+                ];
+                
+                projects = sampleProjects;
+                localStorage.setItem('projects', JSON.stringify(projects));
+                loadFeaturedProjects();
+                updateStats();
+            }
+            
+            // Adicionar exemplo de equipamentos se não houver nenhum
+            if (equipments.length === 0) {
+                const sampleEquipments = [
+                    {
+                        id: Math.random().toString(36).substr(2, 9),
+                        name: 'Canon EOS C70',
+                        type: 'camera',
+                        code: 'CAM-001',
+                        status: 'available',
+                        projectId: null,
+                        acquisitionDate: '2023-01-15',
+                        maintenanceDate: '2023-04-05',
+                        value: '25000',
+                        notes: 'Câmera principal para documentários',
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    },
+                    {
+                        id: Math.random().toString(36).substr(2, 9),
+                        name: 'Sony A7S III',
+                        type: 'camera',
+                        code: 'CAM-002',
+                        status: 'in-use',
+                        projectId: projects.length > 0 ? projects[0].id : null,
+                        acquisitionDate: '2022-11-20',
+                        maintenanceDate: '2023-03-12',
+                        value: '18000',
+                        notes: 'Excelente em baixa luminosidade',
+                        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                        updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+                    },
+                    {
+                        id: Math.random().toString(36).substr(2, 9),
+                        name: 'Canon RF 24-70mm f/2.8',
+                        type: 'lens',
+                        code: 'LENS-001',
+                        status: 'available',
+                        projectId: null,
+                        acquisitionDate: '2022-12-05',
+                        maintenanceDate: '2023-06-10',
+                        value: '10000',
+                        notes: 'Lente zoom profissional',
+                        createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+                        updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+                    },
+                    {
+                        id: Math.random().toString(36).substr(2, 9),
+                        name: 'Aputure 300D Mark II',
+                        type: 'light',
+                        code: 'LIGHT-001',
+                        status: 'maintenance',
+                        projectId: null,
+                        acquisitionDate: '2023-02-18',
+                        maintenanceDate: '2023-08-01',
+                        value: '7000',
+                        notes: 'LED principal para externas',
+                        createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+                        updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+                    }
+                ];
+                
+                equipments = sampleEquipments;
+                localStorage.setItem('equipments', JSON.stringify(equipments));
+                loadRecentEquipment();
+                updateStats();
+            }
+        });
+    </script>
+</body>
+</html>
