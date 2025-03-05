@@ -681,22 +681,11 @@
     </div>
 
     <script>
+        // Aguarda o DOM ser totalmente carregado antes de executar o script
         document.addEventListener('DOMContentLoaded', function() {
-            // Elementos DOM
-            const projectGrid = document.getElementById('project-grid');
-            const newProjectBtn = document.getElementById('new-project-btn');
-            const projectModal = document.getElementById('project-modal');
-            const modalClose = document.getElementById('modal-close');
-            const cancelProject = document.getElementById('cancel-project');
-            const saveProject = document.getElementById('save-project');
-            const projectForm = document.getElementById('project-form');
-            const searchInput = document.getElementById('search-input');
-            const statusFilter = document.getElementById('status-filter');
-            const sortFilter = document.getElementById('sort-filter');
-            
-            // Estado da aplicação
-            let projects = JSON.parse(localStorage.getItem('projects')) || [
-                // Projetos de exemplo pré-carregados
+            // ===== DADOS DE EXEMPLO PRÉ-CARREGADOS =====
+            // Projetos padrão que serão mostrados se não houver dados no localStorage
+            const projetosExemplo = [
                 {
                     id: 'proj1',
                     title: 'Documentário Amazônia',
@@ -731,50 +720,84 @@
                     updatedAt: '2025-01-16T16:20:00.000Z'
                 }
             ];
-            let currentProjectId = null;
             
-            // Funções auxiliares
+            // ===== ELEMENTOS DOM =====
+            // Seleção de todos os elementos necessários
+            const projectGrid = document.getElementById('project-grid');
+            const newProjectBtn = document.getElementById('new-project-btn');
+            const projectModal = document.getElementById('project-modal');
+            const modalClose = document.getElementById('modal-close');
+            const cancelProject = document.getElementById('cancel-project');
+            const saveProject = document.getElementById('save-project');
+            const projectForm = document.getElementById('project-form');
+            const searchInput = document.getElementById('search-input');
+            const statusFilter = document.getElementById('status-filter');
+            const sortFilter = document.getElementById('sort-filter');
+            
+            // ===== ESTADO DA APLICAÇÃO =====
+            // Recupera projetos do localStorage ou usa os exemplos
+            let projects = JSON.parse(localStorage.getItem('projects')) || projetosExemplo;
+            let currentProjectId = null; // ID do projeto em edição
+            
+            // ===== FUNÇÕES AUXILIARES =====
+            
+            // Gera um ID único para novos projetos
             function generateId() {
-                return Math.random().toString(36).substr(2, 9);
+                return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
             }
             
+            // Formata datas para exibição
             function formatDate(dateString) {
                 if (!dateString) return 'N/A';
                 const date = new Date(dateString);
                 return date.toLocaleDateString('pt-BR');
             }
             
+            // Obtém o label para status
             function getStatusLabel(status) {
-                switch (status) {
-                    case 'planning':
-                        return 'Em Planejamento';
-                    case 'active':
-                        return 'Em Andamento';
-                    case 'completed':
-                        return 'Concluído';
-                    default:
-                        return 'Desconhecido';
-                }
+                const labels = {
+                    'planning': 'Em Planejamento',
+                    'active': 'Em Andamento',
+                    'completed': 'Concluído'
+                };
+                return labels[status] || 'Desconhecido';
             }
             
+            // Obtém classe CSS para status
             function getStatusClass(status) {
-                switch (status) {
-                    case 'planning':
-                        return 'status-planning';
-                    case 'active':
-                        return 'status-active';
-                    case 'completed':
-                        return 'status-completed';
-                    default:
-                        return '';
-                }
+                const classes = {
+                    'planning': 'status-planning',
+                    'active': 'status-active',
+                    'completed': 'status-completed'
+                };
+                return classes[status] || '';
             }
             
-            // Renderizar projetos
+            // ===== MANIPULAÇÃO DO MODAL =====
+            
+            // Abre o modal
+            function openModal() {
+                projectModal.classList.add('show');
+                document.body.style.overflow = 'hidden'; // Impede rolagem do body
+            }
+            
+            // Fecha o modal e reseta
+            function closeModal() {
+                projectModal.classList.remove('show');
+                document.body.style.overflow = ''; // Restaura rolagem do body
+                currentProjectId = null;
+                projectForm.reset();
+                document.querySelector('.modal-title').textContent = 'Novo Projeto';
+            }
+            
+            // ===== MANIPULAÇÃO DE PROJETOS =====
+            
+            // Renderiza os projetos na grid
             function renderProjects() {
+                // Cria cópia para não modificar original durante filtragem
                 let filteredProjects = [...projects];
                 
-                // Aplicar filtro de pesquisa
+                // Aplica filtro de busca
                 const searchTerm = searchInput.value.toLowerCase().trim();
                 if (searchTerm) {
                     filteredProjects = filteredProjects.filter(project => 
@@ -783,13 +806,13 @@
                     );
                 }
                 
-                // Aplicar filtro de status
+                // Aplica filtro de status
                 const statusValue = statusFilter.value;
                 if (statusValue !== 'all') {
                     filteredProjects = filteredProjects.filter(project => project.status === statusValue);
                 }
                 
-                // Aplicar ordenação
+                // Aplica ordenação
                 const sortValue = sortFilter.value;
                 switch (sortValue) {
                     case 'date-desc':
@@ -806,9 +829,10 @@
                         break;
                 }
                 
-                // Limpar grid e renderizar projetos filtrados
+                // Limpa a grid antes de renderizar
                 projectGrid.innerHTML = '';
                 
+                // Se não houver projetos, mostra mensagem vazia
                 if (filteredProjects.length === 0) {
                     projectGrid.innerHTML = `
                         <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 50px;">
@@ -820,6 +844,7 @@
                     return;
                 }
                 
+                // Renderiza cada projeto
                 filteredProjects.forEach(project => {
                     const projectCard = document.createElement('div');
                     projectCard.className = 'project-card';
@@ -840,7 +865,6 @@
                                 <span>${formatDate(project.startDate)} - ${formatDate(project.endDate)}</span>
                             </div>
                             <div class="team-members">
-                                <!-- Placeholders para avatares da equipe -->
                                 <div class="member-avatar">T</div>
                                 <div class="member-avatar">J</div>
                                 <div class="member-avatar">M</div>
@@ -848,17 +872,21 @@
                         </div>
                     `;
                     
+                    // Adiciona evento de clique para editar
                     projectCard.addEventListener('click', () => editProject(project.id));
                     projectGrid.appendChild(projectCard);
                 });
             }
             
-            // Abrir modal para editar projeto
+            // Prepara o modal para editar um projeto existente
             function editProject(id) {
                 const project = projects.find(p => p.id === id);
                 if (!project) return;
                 
+                // Define o ID do projeto em edição
                 currentProjectId = id;
+                
+                // Preenche o formulário com dados do projeto
                 document.getElementById('project-title').value = project.title;
                 document.getElementById('project-description').value = project.description;
                 document.getElementById('project-status').value = project.status;
@@ -866,27 +894,16 @@
                 document.getElementById('project-end-date').value = project.endDate || '';
                 document.getElementById('project-progress').value = project.progress;
                 
+                // Altera o título do modal
                 document.querySelector('.modal-title').textContent = 'Editar Projeto';
+                
+                // Abre o modal
                 openModal();
             }
             
-            // Abrir modal
-            function openModal() {
-                projectModal.classList.add('show');
-                document.body.style.overflow = 'hidden';
-            }
-            
-            // Fechar modal
-            function closeModal() {
-                projectModal.classList.remove('show');
-                document.body.style.overflow = '';
-                currentProjectId = null;
-                projectForm.reset();
-                document.querySelector('.modal-title').textContent = 'Novo Projeto';
-            }
-            
-            // Salvar projeto (novo ou editado)
+            // Salva o projeto (novo ou editado)
             function saveProjectData() {
+                // Obtém valores do formulário
                 const title = document.getElementById('project-title').value;
                 const description = document.getElementById('project-description').value;
                 const status = document.getElementById('project-status').value;
@@ -894,13 +911,14 @@
                 const endDate = document.getElementById('project-end-date').value;
                 const progress = parseInt(document.getElementById('project-progress').value) || 0;
                 
+                // Validação básica
                 if (!title || !description || !startDate) {
                     alert('Por favor, preencha todos os campos obrigatórios.');
                     return;
                 }
                 
+                // Se estiver editando um projeto existente
                 if (currentProjectId) {
-                    // Editar projeto existente
                     const index = projects.findIndex(p => p.id === currentProjectId);
                     if (index > -1) {
                         projects[index] = {
@@ -915,7 +933,7 @@
                         };
                     }
                 } else {
-                    // Criar novo projeto
+                    // Criando um novo projeto
                     const newProject = {
                         id: generateId(),
                         title,
@@ -930,63 +948,62 @@
                     projects.push(newProject);
                 }
                 
-                // Salvar no localStorage e atualizar a UI
+                // Salva no localStorage e atualiza a UI
                 localStorage.setItem('projects', JSON.stringify(projects));
                 closeModal();
                 renderProjects();
             }
             
-            // Event Listeners
+            // ===== EVENT LISTENERS =====
+            
+            // Botão para criar novo projeto
             newProjectBtn.addEventListener('click', function() {
                 currentProjectId = null;
                 projectForm.reset();
+                
+                // Define a data de hoje como padrão para novos projetos
                 document.getElementById('project-start-date').valueAsDate = new Date();
+                
                 document.querySelector('.modal-title').textContent = 'Novo Projeto';
                 openModal();
             });
             
+            // Botões para fechar o modal
             modalClose.addEventListener('click', closeModal);
             cancelProject.addEventListener('click', closeModal);
             
+            // Botão para salvar o projeto
             saveProject.addEventListener('click', function(e) {
                 e.preventDefault();
                 saveProjectData();
             });
             
+            // Filtragem e ordenação
             searchInput.addEventListener('input', renderProjects);
             statusFilter.addEventListener('change', renderProjects);
             sortFilter.addEventListener('change', renderProjects);
             
-            // Initialize
-            renderProjects();
-            
-            // Fechar modal ao clicar fora
+            // Fechar o modal ao clicar fora dele
             projectModal.addEventListener('click', function(e) {
                 if (e.target === projectModal) {
                     closeModal();
                 }
             });
             
-            // Mobile menu toggle
-            document.querySelector('.menu-toggle')?.addEventListener('click', function() {
-                document.querySelector('.sidebar').classList.toggle('show');
+            // Atalhos de teclado
+            document.addEventListener('keydown', function(e) {
+                if (projectModal.classList.contains('show')) {
+                    if (e.key === 'Escape') {
+                        closeModal();
+                    } else if (e.key === 'Enter' && e.ctrlKey) {
+                        saveProjectData();
+                    }
+                }
             });
             
-            // Exemplo de dados para adicionar um projeto de demonstração se não houver nenhum
-            if (projects.length === 0) {
-                const demoProject = {
-                    id: generateId(),
-                    title: 'Meu Primeiro Projeto',
-                    description: 'Este é um projeto de exemplo para demonstrar a funcionalidade da aplicação.',
-                    status: 'planning',
-                    startDate: new Date().toISOString().split('T')[0],
-                    endDate: '',
-                    progress: 0,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                };
-                
-                projects.push(demoProject);
-                localStorage.setItem('projects', JSON.stringify(projects));
-                renderProjects();
-            }
+            // Inicializa a aplicação carregando os projetos
+            renderProjects();
+        });
+    </script>
+</body>
+</html>
