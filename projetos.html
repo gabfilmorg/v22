@@ -1,246 +1,4 @@
-<div class="item-content">${equipment.quantity} unidade(s) por ${equipment.days} dia(s)</div>
-                    <div class="item-footer">
-                        <div>Custo: R$ ${equipment.cost.toFixed(2)}</div>
-                    </div>
-                    <button class="remove-btn" data-id="${equipment.id}"><i class="ri-delete-bin-line"></i></button>
-                `;
-                
-                equipmentList.appendChild(equipmentEl);
-                
-                // Limpar campos
-                document.getElementById('equipment-notes').value = '';
-                
-                // Atualizar total do orçamento
-                updateBudgetTotals();
-            });
-            
-            // Adicionar dia ao cronograma
-            addScheduleBtn.addEventListener('click', function() {
-                const scheduleDate = document.getElementById('schedule-date').value;
-                const scheduleDescription = document.getElementById('schedule-description').value;
-                
-                if (!scheduleDate) {
-                    alert('Por favor, informe a data.');
-                    return;
-                }
-                
-                if (!scheduleDescription) {
-                    alert('Por favor, informe uma descrição para esta diária.');
-                    return;
-                }
-                
-                // Criar objeto do dia de cronograma
-                const scheduleDay = {
-                    id: 'sched_' + Date.now(),
-                    date: scheduleDate,
-                    startTime: document.getElementById('schedule-start-time').value,
-                    endTime: document.getElementById('schedule-end-time').value,
-                    location: document.getElementById('schedule-location').value,
-                    locationName: document.getElementById('schedule-location').options[document.getElementById('schedule-location').selectedIndex]?.text || 'Não especificada',
-                    description: scheduleDescription,
-                    notes: document.getElementById('schedule-notes').value
-                };
-                
-                // Adicionar à lista de dias de cronograma
-                projectData.schedule.push(scheduleDay);
-                
-                // Criar e adicionar elemento visual
-                const dayEl = document.createElement('div');
-                dayEl.className = 'item-card';
-                dayEl.dataset.id = scheduleDay.id;
-                
-                dayEl.innerHTML = `
-                    <div class="item-header">
-                        <div class="item-title">${scheduleDay.description}</div>
-                        <div class="item-badge">${formatDate(scheduleDay.date)}</div>
-                    </div>
-                    <div class="item-content">
-                        ${scheduleDay.locationName}
-                    </div>
-                    <div class="item-footer">
-                        <div>${scheduleDay.startTime || '--'} - ${scheduleDay.endTime || '--'}</div>
-                    </div>
-                    <button class="remove-btn" data-id="${scheduleDay.id}"><i class="ri-delete-bin-line"></i></button>
-                `;
-                
-                scheduleDaysList.appendChild(dayEl);
-                
-                // Limpar campos
-                document.getElementById('schedule-description').value = '';
-                document.getElementById('schedule-notes').value = '';
-            });
-            
-            // Adicionar item ao orçamento
-            addBudgetItemBtn.addEventListener('click', function() {
-                const budgetItemDescription = document.getElementById('budget-item-description').value;
-                const budgetItemValue = parseFloat(document.getElementById('budget-item-value').value) || 0;
-                
-                if (!budgetItemDescription) {
-                    alert('Por favor, informe a descrição do item.');
-                    return;
-                }
-                
-                // Criar objeto do item de orçamento
-                const budgetItem = {
-                    id: 'budget_' + Date.now(),
-                    description: budgetItemDescription,
-                    category: document.getElementById('budget-item-category').value,
-                    categoryText: document.getElementById('budget-item-category').options[document.getElementById('budget-item-category').selectedIndex].text,
-                    value: budgetItemValue
-                };
-                
-                // Adicionar à lista de itens de orçamento
-                projectData.budget.items.push(budgetItem);
-                
-                // Criar e adicionar elemento visual
-                const itemEl = document.createElement('div');
-                itemEl.className = 'item-card';
-                itemEl.dataset.id = budgetItem.id;
-                
-                itemEl.innerHTML = `
-                    <div class="item-header">
-                        <div class="item-title">${budgetItem.description}</div>
-                        <div class="item-badge">${budgetItem.categoryText}</div>
-                    </div>
-                    <div class="item-footer">
-                        <div>Valor: R$ ${budgetItem.value.toFixed(2)}</div>
-                    </div>
-                    <button class="remove-btn" data-id="${budgetItem.id}"><i class="ri-delete-bin-line"></i></button>
-                `;
-                
-                budgetItemsList.appendChild(itemEl);
-                
-                // Limpar campos
-                document.getElementById('budget-item-description').value = '';
-                document.getElementById('budget-item-value').value = '';
-                
-                // Atualizar total do orçamento
-                updateBudgetTotals();
-            });
-            
-            // ===== REMOÇÃO DE ITENS =====
-            // Delegação de eventos para remover itens
-            document.addEventListener('click', function(e) {
-                if (e.target.closest('.remove-btn')) {
-                    const removeBtn = e.target.closest('.remove-btn');
-                    const itemId = removeBtn.dataset.id;
-                    const itemCard = removeBtn.closest('.item-card');
-                    
-                    // Remover do array de dados apropriado
-                    if (itemId.startsWith('loc_')) {
-                        projectData.locations = projectData.locations.filter(l => l.id !== itemId);
-                        updateScheduleLocationOptions();
-                    } else if (itemId.startsWith('team_')) {
-                        projectData.team = projectData.team.filter(m => m.id !== itemId);
-                    } else if (itemId.startsWith('equip_')) {
-                        projectData.equipment = projectData.equipment.filter(e => e.id !== itemId);
-                    } else if (itemId.startsWith('sched_')) {
-                        projectData.schedule = projectData.schedule.filter(d => d.id !== itemId);
-                    } else if (itemId.startsWith('budget_')) {
-                        projectData.budget.items = projectData.budget.items.filter(i => i.id !== itemId);
-                    }
-                    
-                    // Remover o elemento visual
-                    itemCard.remove();
-                    
-                    // Atualizar totais do orçamento, se necessário
-                    updateBudgetTotals();
-                }
-            });
-            
-            // ===== FUNÇÕES AUXILIARES ADICIONAIS =====
-            // Atualizar opções de locação no cronograma
-            function updateScheduleLocationOptions() {
-                const locationSelect = document.getElementById('schedule-location');
-                
-                // Limpar opções existentes
-                while (locationSelect.options.length > 1) {
-                    locationSelect.remove(1);
-                }
-                
-                // Adicionar locações como opções
-                projectData.locations.forEach(location => {
-                    const option = document.createElement('option');
-                    option.value = location.id;
-                    option.textContent = location.name;
-                    locationSelect.appendChild(option);
-                });
-            }
-            
-            // Atualizar totais do orçamento
-            function updateBudgetTotals() {
-                // Calcular total da equipe
-                const teamTotal = projectData.team.reduce((sum, member) => sum + (member.total || 0), 0);
-                document.getElementById('budget-team-total').textContent = 'R$ ' + teamTotal.toFixed(2);
-                
-                // Calcular total de equipamentos
-                const equipmentTotal = projectData.equipment.reduce((sum, equip) => sum + (equip.cost || 0), 0);
-                document.getElementById('budget-equipment-total').textContent = 'R$ ' + equipmentTotal.toFixed(2);
-                
-                // Calcular total de outros itens
-                const otherTotal = projectData.budget.items.reduce((sum, item) => sum + (item.value || 0), 0);
-                document.getElementById('budget-other-total').textContent = 'R$ ' + otherTotal.toFixed(2);
-                
-                // Calcular total geral
-                const grandTotal = teamTotal + equipmentTotal + otherTotal;
-                if (!document.getElementById('budget-total').value) {
-                    document.getElementById('budget-total').value = grandTotal.toFixed(2);
-                }
-            }
-            
-            // ===== EVENT LISTENERS =====
-            // Botão de novo projeto
-            newProjectBtn.addEventListener('click', function() {
-                currentProjectId = null;
-                
-                // Definir data de hoje como padrão para início
-                document.getElementById('project-start-date').valueAsDate = new Date();
-                
-                document.querySelector('.modal-title').textContent = 'Novo Projeto';
-                openModal();
-            });
-            
-            // Botões para fechar o modal
-            modalClose.addEventListener('click', closeModal);
-            cancelProject.addEventListener('click', closeModal);
-            
-            // Botão para salvar o projeto
-            saveProject.addEventListener('click', function(e) {
-                e.preventDefault();
-                saveProjectData();
-            });
-            
-            // Filtros e ordenação
-            searchInput.addEventListener('input', renderProjects);
-            statusFilter.addEventListener('change', renderProjects);
-            typeFilter.addEventListener('change', renderProjects);
-            sortFilter.addEventListener('change', renderProjects);
-            
-            // Fechar o modal ao clicar fora
-            projectModal.addEventListener('click', function(e) {
-                if (e.target === projectModal) {
-                    closeModal();
-                }
-            });
-            
-            // Teclas de atalho
-            document.addEventListener('keydown', function(e) {
-                if (projectModal.classList.contains('show')) {
-                    if (e.key === 'Escape') {
-                        closeModal();
-                    } else if (e.key === 'Enter' && e.ctrlKey) {
-                        saveProjectData();
-                    }
-                }
-            });
-            
-            // ===== INICIALIZAÇÃO =====
-            // Carregar os projetos na inicialização
-            renderProjects();
-        });
-    </script>
-</body>
-</html>                    'documentary': 'Documentário',
+'documentary': 'Documentário',
                     'shortfilm': 'Curta-Metragem',
                     'corporate': 'Vídeo Institucional',
                     'event': 'Cobertura de Evento',
@@ -534,7 +292,266 @@
                                 <div class="item-title">${equipment.name}</div>
                                 <div class="item-badge">${sourceLabels[equipment.source] || equipment.source}</div>
                             </div>
-                            <div class="item-content">${equipment.quantity || 1} unidade(s) por ${equipment.days || 1} dia(s)</div>
+                            <div class="item-content">${equipment.quantity} unidade(s) por ${equipment.days} dia(s)</div>
+                    <div class="item-footer">
+                        <div>Custo: R$ ${equipment.cost.toFixed(2)}</div>
+                    </div>
+                    <button class="remove-btn" data-id="${equipment.id}"><i class="ri-delete-bin-line"></i></button>
+                `;
+                
+                equipmentList.appendChild(equipmentEl);
+                
+                // Limpar campos
+                document.getElementById('equipment-notes').value = '';
+                
+                // Atualizar total do orçamento
+                updateBudgetTotals();
+            });
+            
+            // Adicionar dia ao cronograma
+            addScheduleBtn.addEventListener('click', function() {
+                const scheduleDate = document.getElementById('schedule-date').value;
+                const scheduleDescription = document.getElementById('schedule-description').value;
+                
+                if (!scheduleDate) {
+                    alert('Por favor, informe a data.');
+                    return;
+                }
+                
+                if (!scheduleDescription) {
+                    alert('Por favor, informe uma descrição para esta diária.');
+                    return;
+                }
+                
+                const locationSelect = document.getElementById('schedule-location');
+                const locationName = locationSelect.options[locationSelect.selectedIndex]?.text || 'Locação não especificada';
+                
+                // Criar objeto do dia de cronograma
+                const scheduleDay = {
+                    id: 'sched_' + Date.now(),
+                    date: scheduleDate,
+                    startTime: document.getElementById('schedule-start-time').value,
+                    endTime: document.getElementById('schedule-end-time').value,
+                    location: document.getElementById('schedule-location').value,
+                    locationName: locationName,
+                    description: scheduleDescription,
+                    notes: document.getElementById('schedule-notes').value
+                };
+                
+                // Adicionar à lista de dias de cronograma
+                projectData.schedule.push(scheduleDay);
+                
+                // Criar e adicionar elemento visual
+                const dayEl = document.createElement('div');
+                dayEl.className = 'item-card';
+                dayEl.dataset.id = scheduleDay.id;
+                
+                dayEl.innerHTML = `
+                    <div class="item-header">
+                        <div class="item-title">${scheduleDay.description}</div>
+                        <div class="item-badge">${formatDate(scheduleDay.date)}</div>
+                    </div>
+                    <div class="item-content">
+                        ${scheduleDay.locationName}
+                    </div>
+                    <div class="item-footer">
+                        <div>${scheduleDay.startTime || '--'} - ${scheduleDay.endTime || '--'}</div>
+                    </div>
+                    <button class="remove-btn" data-id="${scheduleDay.id}"><i class="ri-delete-bin-line"></i></button>
+                `;
+                
+                scheduleDaysList.appendChild(dayEl);
+                
+                // Limpar campos
+                document.getElementById('schedule-description').value = '';
+                document.getElementById('schedule-notes').value = '';
+            });
+            
+            // Adicionar item ao orçamento
+            addBudgetItemBtn.addEventListener('click', function() {
+                const budgetItemDescription = document.getElementById('budget-item-description').value;
+                const budgetItemValue = parseFloat(document.getElementById('budget-item-value').value) || 0;
+                
+                if (!budgetItemDescription) {
+                    alert('Por favor, informe a descrição do item.');
+                    return;
+                }
+                
+                const categorySelect = document.getElementById('budget-item-category');
+                const categoryText = categorySelect.options[categorySelect.selectedIndex].text;
+                
+                // Criar objeto do item de orçamento
+                const budgetItem = {
+                    id: 'budget_' + Date.now(),
+                    description: budgetItemDescription,
+                    category: document.getElementById('budget-item-category').value,
+                    categoryText: categoryText,
+                    value: budgetItemValue
+                };
+                
+                // Adicionar à lista de itens de orçamento
+                projectData.budget.items.push(budgetItem);
+                
+                // Criar e adicionar elemento visual
+                const itemEl = document.createElement('div');
+                itemEl.className = 'item-card';
+                itemEl.dataset.id = budgetItem.id;
+                
+                itemEl.innerHTML = `
+                    <div class="item-header">
+                        <div class="item-title">${budgetItem.description}</div>
+                        <div class="item-badge">${budgetItem.categoryText}</div>
+                    </div>
+                    <div class="item-footer">
+                        <div>Valor: R$ ${budgetItem.value.toFixed(2)}</div>
+                    </div>
+                    <button class="remove-btn" data-id="${budgetItem.id}"><i class="ri-delete-bin-line"></i></button>
+                `;
+                
+                budgetItemsList.appendChild(itemEl);
+                
+                // Limpar campos
+                document.getElementById('budget-item-description').value = '';
+                document.getElementById('budget-item-value').value = '';
+                
+                // Atualizar total do orçamento
+                updateBudgetTotals();
+            });
+            
+            // ===== REMOÇÃO DE ITENS =====
+            // Delegação de eventos para remover itens
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.remove-btn')) {
+                    const removeBtn = e.target.closest('.remove-btn');
+                    const itemId = removeBtn.dataset.id;
+                    const itemCard = removeBtn.closest('.item-card');
+                    
+                    // Remover do array de dados apropriado
+                    if (itemId.startsWith('loc_')) {
+                        projectData.locations = projectData.locations.filter(l => l.id !== itemId);
+                        updateScheduleLocationOptions();
+                    } else if (itemId.startsWith('team_')) {
+                        projectData.team = projectData.team.filter(m => m.id !== itemId);
+                    } else if (itemId.startsWith('equip_')) {
+                        projectData.equipment = projectData.equipment.filter(e => e.id !== itemId);
+                    } else if (itemId.startsWith('sched_')) {
+                        projectData.schedule = projectData.schedule.filter(d => d.id !== itemId);
+                    } else if (itemId.startsWith('budget_')) {
+                        projectData.budget.items = projectData.budget.items.filter(i => i.id !== itemId);
+                    }
+                    
+                    // Remover o elemento visual
+                    itemCard.remove();
+                    
+                    // Atualizar totais do orçamento, se necessário
+                    updateBudgetTotals();
+                }
+            });
+            
+            // ===== FUNÇÕES AUXILIARES =====
+            // Atualizar opções de locação no cronograma
+            function updateScheduleLocationOptions() {
+                const locationSelect = document.getElementById('schedule-location');
+                
+                // Limpar opções existentes
+                while (locationSelect.options.length > 1) {
+                    locationSelect.remove(1);
+                }
+                
+                // Adicionar locações como opções
+                projectData.locations.forEach(location => {
+                    const option = document.createElement('option');
+                    option.value = location.id;
+                    option.textContent = location.name;
+                    locationSelect.appendChild(option);
+                });
+            }
+            
+            // Atualizar totais do orçamento
+            function updateBudgetTotals() {
+                // Calcular total da equipe
+                const teamTotal = projectData.team.reduce((sum, member) => sum + (member.total || 0), 0);
+                document.getElementById('budget-team-total').textContent = 'R$ ' + teamTotal.toFixed(2);
+                
+                // Calcular total de equipamentos
+                const equipmentTotal = projectData.equipment.reduce((sum, equip) => sum + (equip.cost || 0), 0);
+                document.getElementById('budget-equipment-total').textContent = 'R$ ' + equipmentTotal.toFixed(2);
+                
+                // Calcular total de outros itens
+                const otherTotal = projectData.budget.items.reduce((sum, item) => sum + (item.value || 0), 0);
+                document.getElementById('budget-other-total').textContent = 'R$ ' + otherTotal.toFixed(2);
+                
+                // Definir valor do campo de locação como zero por enquanto
+                document.getElementById('budget-location-total').textContent = 'R$ 0,00';
+                
+                // Calcular total geral
+                const grandTotal = teamTotal + equipmentTotal + otherTotal;
+                if (!document.getElementById('budget-total').value) {
+                    document.getElementById('budget-total').value = grandTotal.toFixed(2);
+                }
+            }
+            
+            // ===== EVENT LISTENERS =====
+            // Botão para criar novo projeto
+            newProjectBtn.addEventListener('click', function() {
+                currentProjectId = null;
+                projectForm.reset();
+                
+                // Define a data de hoje como padrão para novos projetos
+                document.getElementById('project-start-date').valueAsDate = new Date();
+                
+                // Restaurar valores padrão
+                progressValue.textContent = '0%';
+                
+                // Esconder detalhes específicos
+                photographyDetails.style.display = 'none';
+                videoDetails.style.display = 'none';
+                
+                document.querySelector('.modal-title').textContent = 'Novo Projeto';
+                openModal();
+            });
+            
+            // Botões para fechar o modal
+            modalClose.addEventListener('click', closeModal);
+            cancelProject.addEventListener('click', closeModal);
+            
+            // Botão para salvar o projeto
+            saveProject.addEventListener('click', function(e) {
+                e.preventDefault();
+                saveProjectData();
+            });
+            
+            // Filtros e ordenação
+            searchInput.addEventListener('input', renderProjects);
+            statusFilter.addEventListener('change', renderProjects);
+            typeFilter.addEventListener('change', renderProjects);
+            sortFilter.addEventListener('change', renderProjects);
+            
+            // Fechar o modal ao clicar fora
+            projectModal.addEventListener('click', function(e) {
+                if (e.target === projectModal) {
+                    closeModal();
+                }
+            });
+            
+            // Atalhos de teclado
+            document.addEventListener('keydown', function(e) {
+                if (projectModal.classList.contains('show')) {
+                    if (e.key === 'Escape') {
+                        closeModal();
+                    } else if (e.key === 'Enter' && e.ctrlKey) {
+                        saveProjectData();
+                    }
+                }
+            });
+            
+            // ===== INICIALIZAÇÃO =====
+            // Carregar projetos ao iniciar
+            renderProjects();
+        });
+    </script>
+</body>
+</html> || 1} unidade(s) por ${equipment.days || 1} dia(s)</div>
                             <div class="item-footer">
                                 <div>Custo: R$ ${equipment.cost ? equipment.cost.toFixed(2) : '0.00'}</div>
                             </div>
