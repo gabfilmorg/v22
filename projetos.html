@@ -695,7 +695,42 @@
             const sortFilter = document.getElementById('sort-filter');
             
             // Estado da aplicação
-            let projects = JSON.parse(localStorage.getItem('projects')) || [];
+            let projects = JSON.parse(localStorage.getItem('projects')) || [
+                // Projetos de exemplo pré-carregados
+                {
+                    id: 'proj1',
+                    title: 'Documentário Amazônia',
+                    description: 'Documentário sobre biodiversidade e conservação na Floresta Amazônica.',
+                    status: 'active',
+                    startDate: '2025-01-15',
+                    endDate: '2025-05-30',
+                    progress: 65,
+                    createdAt: '2025-01-10T10:00:00.000Z',
+                    updatedAt: '2025-02-25T14:30:00.000Z'
+                },
+                {
+                    id: 'proj2',
+                    title: 'Curta-metragem "Reflexos"',
+                    description: 'Um curta-metragem experimental explorando a percepção humana através de reflexos e espelhos.',
+                    status: 'planning',
+                    startDate: '2025-04-10',
+                    endDate: '2025-06-20',
+                    progress: 20,
+                    createdAt: '2025-02-05T09:15:00.000Z',
+                    updatedAt: '2025-02-20T11:45:00.000Z'
+                },
+                {
+                    id: 'proj3',
+                    title: 'Comercial Eco-Friendly',
+                    description: 'Campanha publicitária para produtos sustentáveis com foco em conscientização ambiental.',
+                    status: 'completed',
+                    startDate: '2024-11-01',
+                    endDate: '2025-01-15',
+                    progress: 100,
+                    createdAt: '2024-10-25T08:30:00.000Z',
+                    updatedAt: '2025-01-16T16:20:00.000Z'
+                }
+            ];
             let currentProjectId = null;
             
             // Funções auxiliares
@@ -720,11 +755,6 @@
                     default:
                         return 'Desconhecido';
                 }
-                
-                // Salvar no localStorage e atualizar a UI
-                localStorage.setItem('projects', JSON.stringify(projects));
-                closeModal();
-                renderProjects();
             }
             
             function getStatusClass(status) {
@@ -852,6 +882,7 @@
                 document.body.style.overflow = '';
                 currentProjectId = null;
                 projectForm.reset();
+                document.querySelector('.modal-title').textContent = 'Novo Projeto';
             }
             
             // Salvar projeto (novo ou editado)
@@ -897,4 +928,65 @@
                         updatedAt: new Date().toISOString()
                     };
                     projects.push(newProject);
+                }
                 
+                // Salvar no localStorage e atualizar a UI
+                localStorage.setItem('projects', JSON.stringify(projects));
+                closeModal();
+                renderProjects();
+            }
+            
+            // Event Listeners
+            newProjectBtn.addEventListener('click', function() {
+                currentProjectId = null;
+                projectForm.reset();
+                document.getElementById('project-start-date').valueAsDate = new Date();
+                document.querySelector('.modal-title').textContent = 'Novo Projeto';
+                openModal();
+            });
+            
+            modalClose.addEventListener('click', closeModal);
+            cancelProject.addEventListener('click', closeModal);
+            
+            saveProject.addEventListener('click', function(e) {
+                e.preventDefault();
+                saveProjectData();
+            });
+            
+            searchInput.addEventListener('input', renderProjects);
+            statusFilter.addEventListener('change', renderProjects);
+            sortFilter.addEventListener('change', renderProjects);
+            
+            // Initialize
+            renderProjects();
+            
+            // Fechar modal ao clicar fora
+            projectModal.addEventListener('click', function(e) {
+                if (e.target === projectModal) {
+                    closeModal();
+                }
+            });
+            
+            // Mobile menu toggle
+            document.querySelector('.menu-toggle')?.addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('show');
+            });
+            
+            // Exemplo de dados para adicionar um projeto de demonstração se não houver nenhum
+            if (projects.length === 0) {
+                const demoProject = {
+                    id: generateId(),
+                    title: 'Meu Primeiro Projeto',
+                    description: 'Este é um projeto de exemplo para demonstrar a funcionalidade da aplicação.',
+                    status: 'planning',
+                    startDate: new Date().toISOString().split('T')[0],
+                    endDate: '',
+                    progress: 0,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+                
+                projects.push(demoProject);
+                localStorage.setItem('projects', JSON.stringify(projects));
+                renderProjects();
+            }
