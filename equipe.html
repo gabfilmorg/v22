@@ -285,24 +285,30 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            background: rgba(26, 27, 46, 0.8);
+            padding: 12px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--glass-border);
         }
 
         .filters {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
+            max-width: 800px; /* Limita a largura total dos filtros */
         }
 
         .filter-select {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             color: var(--soft-white);
-            padding: 8px 15px;
+            padding: 6px 12px;
             border-radius: var(--border-radius);
             outline: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            min-width: 150px;
+            min-width: 120px; /* Reduz a largura mínima */
+            font-size: 13px; /* Reduz o tamanho da fonte */
         }
 
         .filter-select:hover {
@@ -405,6 +411,7 @@
             overflow: hidden;
             transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
+            position: relative;
         }
 
         .team-card:hover {
@@ -412,21 +419,50 @@
             box-shadow: var(--neon-shadow);
         }
 
+        .delete-member-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 87, 87, 0.2);
+            border: none;
+            color: #ff5757;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            z-index: 3;
+        }
+
+        .team-card:hover .delete-member-btn {
+            opacity: 1;
+        }
+
+        .delete-member-btn:hover {
+            background: rgba(255, 87, 87, 0.3);
+            transform: scale(1.1);
+        }
+
+        /* Ajuste do Card */
         .card-cover {
-            height: 80px;
+            height: 60px;
             background: var(--gradient-primary);
             position: relative;
         }
 
-        /* CORREÇÃO: Avatar de membro perfeitamente centralizado */
         .member-avatar {
             width: 80px;
             height: 80px;
             border-radius: 50%;
             background: var(--deep-space);
             position: absolute;
-            bottom: -40px;
-            left: 20px;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             border: 3px solid var(--deep-space);
             display: flex;
             align-items: center;
@@ -435,10 +471,16 @@
             font-weight: 600;
             color: var(--soft-white);
             line-height: 0;
+            z-index: 2;
+            overflow: hidden;
         }
 
         .card-body {
             padding: 50px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
         }
 
         .member-name {
@@ -453,22 +495,134 @@
             margin-bottom: 15px;
         }
 
+        /* Estilo Monday.com para especialidades */
+        .specialties-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .specialty-box {
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            background: rgba(0, 245, 255, 0.1);
+            color: var(--neon-blue);
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .specialty-box:hover {
+            background: rgba(0, 245, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
         .member-info {
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid var(--glass-border);
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            color: rgba(244, 247, 255, 0.7);
-            font-size: 14px;
+            gap: 12px;
+            align-items: center;
         }
 
         .info-item {
             display: flex;
             align-items: center;
             gap: 8px;
+            width: 100%;
+            justify-content: center;
+            font-size: 13px; /* Reduzindo o tamanho da fonte */
+            white-space: nowrap; /* Evita quebra de linha */
+            overflow: hidden; /* Esconde o excesso */
+            text-overflow: ellipsis; /* Adiciona ... quando necessário */
         }
 
-        .info-item i {
-            color: var(--neon-blue);
+        .info-item:last-child {
+            margin-top: 5px;
+        }
+
+        .info-item span {
+            max-width: 150px; /* Limita a largura máxima */
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .availability-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 5px;
+            user-select: none;
+        }
+
+        .availability-status.disponivel {
+            background: rgba(0, 255, 178, 0.1);
+            color: var(--cyber-green);
+        }
+
+        .availability-status.ocupado {
+            background: rgba(177, 94, 255, 0.1);
+            color: var(--neon-purple);
+        }
+
+        .availability-status.indisponivel {
+            background: rgba(255, 87, 87, 0.1);
+            color: #ff5757;
+        }
+
+        .availability-status:hover {
+            filter: brightness(1.2);
+            transform: translateY(-2px);
+        }
+
+        /* Menu de disponibilidade */
+        .availability-menu {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--deep-space);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 8px;
+            display: none;
+            z-index: 1000;
+            min-width: 150px;
+            margin-bottom: 5px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .availability-menu.show {
+            display: block;
+        }
+
+        .availability-option {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--soft-white);
+        }
+
+        .availability-option:hover {
+            background: var(--glass-bg);
+        }
+
+        .availability-option i {
             font-size: 16px;
         }
 
@@ -498,10 +652,8 @@
         }
 
         .card-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--glass-border);
         }
 
         .member-tag {
@@ -1275,6 +1427,226 @@
                 display: none;
             }
         }
+
+        /* Estilo do Select */
+        .filter-select option {
+            background: var(--deep-space);
+            color: var(--soft-white);
+            padding: 10px;
+        }
+
+        .filter-select:focus option:hover {
+            background: var(--glass-bg);
+        }
+
+        /* Simplificação do Modal de Adicionar Membro */
+        .modal-content {
+            max-width: 500px;
+            margin: 20px auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .upload-area {
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .upload-preview {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 10px;
+        }
+
+        .tags-input {
+            margin-top: 5px;
+        }
+
+        /* Estilo dos Selects */
+        select.form-select, select.filter-select {
+            background-color: var(--deep-space);
+            color: var(--soft-white);
+            border: 1px solid var(--glass-border);
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23F4F7FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
+        }
+
+        select.form-select option, select.filter-select option {
+            background-color: var(--deep-space);
+            color: var(--soft-white);
+            padding: 8px;
+        }
+
+        select.form-select:hover, select.filter-select:hover {
+            border-color: var(--neon-blue);
+        }
+
+        /* Estilo dos Checkboxes de Especialidades */
+        .specialties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .specialty-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .specialty-checkbox:hover {
+            border-color: var(--neon-blue);
+            background: rgba(0, 245, 255, 0.1);
+        }
+
+        .specialty-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--neon-blue);
+        }
+
+        .specialty-checkbox label {
+            cursor: pointer;
+            margin: 0;
+            flex: 1;
+        }
+
+        /* Estilo do Preview de Foto */
+        .photo-upload-section {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+            border: 2px dashed var(--glass-border);
+        }
+
+        .photo-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            background: var(--deep-space);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 3px solid var(--glass-border);
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-preview i {
+            font-size: 48px;
+            color: var(--soft-white);
+        }
+
+        @keyframes highlightCard {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 245, 255, 0.4);
+            }
+            50% {
+                transform: scale(1.03);
+                box-shadow: 0 0 20px 10px rgba(0, 245, 255, 0.2);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 245, 255, 0);
+            }
+        }
+
+        /* Estilo para o preview da foto */
+        .photo-preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .photo-preview-modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .photo-preview-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90vh;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--neon-shadow);
+        }
+
+        .photo-preview-content img {
+            display: block;
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+
+        .photo-preview-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--glass-bg);
+            border: none;
+            color: var(--soft-white);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .photo-preview-close:hover {
+            background: var(--neon-blue);
+            transform: rotate(90deg);
+        }
     </style>
 </head>
 <body>
@@ -1538,87 +1910,118 @@
         <div class="modal" id="addMemberModal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2>Adicionar Novo Membro</h2>
-                    <button class="close-modal"><i class="ri-close-line"></i></button>
+                    <h2>Novo Membro</h2>
+                    <button class="close-modal" onclick="closeModal()"><i class="ri-close-line"></i></button>
                 </div>
                 <div class="modal-body">
-                    <form id="addMemberForm">
-                        <div class="form-group">
-                            <label>Foto de Perfil</label>
-                            <div class="upload-area">
-                                <input type="file" id="profilePhoto" accept="image/*" hidden>
-                                <div class="upload-preview">
-                                    <i class="ri-user-3-line"></i>
-                                </div>
-                                <button type="button" class="btn btn-outline" onclick="document.getElementById('profilePhoto').click()">
-                                    <i class="ri-upload-2-line"></i> Upload Foto
-                                </button>
+                    <form id="addMemberForm" class="simplified-form">
+                        <div class="photo-upload-section">
+                            <div class="photo-preview">
+                                <i class="ri-user-3-line"></i>
                             </div>
+                            <input type="file" id="profilePhoto" accept="image/*" hidden>
+                            <button type="button" class="btn btn-outline" onclick="document.getElementById('profilePhoto').click()">
+                                <i class="ri-camera-line"></i>
+                                Adicionar Foto
+                            </button>
                         </div>
-                        
+
                         <div class="form-row">
                             <div class="form-group">
-                                <label>Nome Completo</label>
-                                <input type="text" required placeholder="Digite o nome completo">
+                                <label>Nome</label>
+                                <input type="text" name="name" required placeholder="Nome completo">
                             </div>
                             <div class="form-group">
                                 <label>Cargo</label>
-                                <input type="text" required placeholder="Ex: Diretor de Fotografia">
+                                <select name="role" class="form-select" required>
+                                    <option value="">Selecione o cargo</option>
+                                    <option value="diretor">Diretor</option>
+                                    <option value="fotografo">Fotógrafo</option>
+                                    <option value="editor">Editor</option>
+                                    <option value="produtor">Produtor</option>
+                                    <option value="som">Técnico de Som</option>
+                                    <option value="assistente">Assistente</option>
+                                </select>
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="email" required placeholder="email@exemplo.com">
+                                <input type="email" name="email" required placeholder="email@exemplo.com">
                             </div>
                             <div class="form-group">
                                 <label>Telefone</label>
-                                <input type="tel" required placeholder="(00) 00000-0000">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Especialidades</label>
-                            <div class="tags-input">
-                                <input type="text" id="tagInput" placeholder="Digite e pressione Enter">
-                                <div class="tags-container"></div>
+                                <input type="tel" name="phone" placeholder="(00) 00000-0000">
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label>Nível de Experiência</label>
-                                <select required>
-                                    <option value="">Selecione</option>
+                                <label>Disponibilidade</label>
+                                <select name="availability" class="form-select" required>
+                                    <option value="disponivel">Disponível</option>
+                                    <option value="ocupado">Ocupado</option>
+                                    <option value="indisponivel">Indisponível</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Experiência</label>
+                                <select name="experience" class="form-select" required>
                                     <option value="junior">Júnior</option>
                                     <option value="pleno">Pleno</option>
                                     <option value="senior">Sênior</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label>Disponibilidade</label>
-                                <select required>
-                                    <option value="">Selecione</option>
-                                    <option value="integral">Tempo Integral</option>
-                                    <option value="parcial">Meio Período</option>
-                                    <option value="freelancer">Freelancer</option>
-                                </select>
-                            </div>
                         </div>
 
                         <div class="form-group">
-                            <label>Biografia</label>
-                            <textarea placeholder="Uma breve descrição sobre o membro"></textarea>
+                            <label>Especialidades</label>
+                            <div class="specialties-grid">
+                                <div class="specialty-checkbox">
+                                    <input type="checkbox" id="spec-filmagem" value="Filmagem">
+                                    <label for="spec-filmagem">Filmagem</label>
+                                </div>
+                                <div class="specialty-checkbox">
+                                    <input type="checkbox" id="spec-edicao" value="Edição">
+                                    <label for="spec-edicao">Edição</label>
+                                </div>
+                                <div class="specialty-checkbox">
+                                    <input type="checkbox" id="spec-som" value="Som">
+                                    <label for="spec-som">Som</label>
+                                </div>
+                                <div class="specialty-checkbox">
+                                    <input type="checkbox" id="spec-iluminacao" value="Iluminação">
+                                    <label for="spec-iluminacao">Iluminação</label>
+                                </div>
+                                <div class="specialty-checkbox">
+                                    <input type="checkbox" id="spec-direcao" value="Direção">
+                                    <label for="spec-direcao">Direção</label>
+                                </div>
+                                <div class="specialty-checkbox">
+                                    <input type="checkbox" id="spec-producao" value="Produção">
+                                    <label for="spec-producao">Produção</label>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-actions">
                             <button type="button" class="btn btn-outline" onclick="closeModal()">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Salvar Membro</button>
+                            <button type="submit" class="btn btn-primary">Salvar</button>
                         </div>
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Preview de Foto -->
+    <div class="photo-preview-modal" id="photoPreviewModal">
+        <div class="photo-preview-content">
+            <img id="photoPreviewImage" src="" alt="Preview da foto">
+            <button class="photo-preview-close" onclick="closePhotoPreview()">
+                <i class="ri-close-line"></i>
+            </button>
         </div>
     </div>
 
@@ -1932,16 +2335,30 @@
                     .substring(0, 2);
                 
                 card.innerHTML = `
-                    <div class="card-cover"></div>
-                    <div class="member-avatar">
-                        ${member.photo ? 
-                            `<img src="${member.photo}" alt="${member.name}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">` :
-                            initials
-                        }
+                    <button class="delete-member-btn" onclick="deleteMember(event, '${member.id}')" title="Excluir membro">
+                        <i class="ri-delete-bin-line"></i>
+                    </button>
+                    <div class="card-cover">
+                        <div class="member-avatar">
+                            ${member.photo ? 
+                                `<img src="${member.photo}" alt="${member.name}" style="width: 100%; height: 100%; object-fit: cover;">` :
+                                initials
+                            }
+                        </div>
                     </div>
                     <div class="card-body">
-                        <h3 class="member-name">${member.name}</h3>
-                        <div class="member-role">${member.role}</div>
+                        <div>
+                            <h3 class="member-name">${member.name}</h3>
+                            <div class="member-role">${member.role}</div>
+                        </div>
+                        
+                        ${member.specialties?.length ? `
+                        <div class="specialties-grid">
+                            ${member.specialties.map(specialty => `
+                                <div class="specialty-box">${specialty}</div>
+                            `).join('')}
+                        </div>
+                        ` : ''}
                         
                         <div class="member-info">
                             <div class="info-item">
@@ -1954,28 +2371,36 @@
                                 <span>${member.phone}</span>
                             </div>
                             ` : ''}
-                            <div class="info-item">
-                                <i class="ri-time-line"></i>
-                                <span>${member.availability}</span>
+                            <div class="info-item" style="position: relative;">
+                                <div class="availability-status ${member.availability}" onclick="toggleAvailabilityMenu(event, '${member.id}')">
+                                    <i class="ri-time-line"></i>
+                                    <span>${member.availability}</span>
+                                </div>
+                                <div class="availability-menu" id="availability-menu-${member.id}">
+                                    <div class="availability-option" onclick="updateAvailability(event, '${member.id}', 'disponivel')">
+                                        <i class="ri-checkbox-circle-line" style="color: var(--cyber-green)"></i>
+                                        Disponível
+                                    </div>
+                                    <div class="availability-option" onclick="updateAvailability(event, '${member.id}', 'ocupado')">
+                                        <i class="ri-time-line" style="color: var(--neon-purple)"></i>
+                                        Ocupado
+                                    </div>
+                                    <div class="availability-option" onclick="updateAvailability(event, '${member.id}', 'indisponivel')">
+                                        <i class="ri-close-circle-line" style="color: #ff5757"></i>
+                                        Indisponível
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        
-                        ${member.specialties?.length ? `
-                        <div class="card-tags">
-                            ${member.specialties.slice(0, 3).map(specialty => `
-                                <div class="member-tag">${specialty}</div>
-                            `).join('')}
-                            ${member.specialties.length > 3 ? `
-                                <div class="member-tag">+${member.specialties.length - 3}</div>
-                            ` : ''}
-                        </div>
-                        ` : ''}
                     </div>
                 `;
                 
-                // Adicionar eventos
-                card.addEventListener('click', () => {
-                    this.showMemberDetails(member.id);
+                // Adicionar evento de clique no card
+                card.addEventListener('click', (e) => {
+                    // Se não clicou no menu de disponibilidade
+                    if (!e.target.closest('.availability-status') && !e.target.closest('.availability-menu')) {
+                        this.showMemberDetails(member.id);
+                    }
                 });
                 
                 return card;
@@ -2193,10 +2618,16 @@
         });
 
         // Atualizar manipulação do formulário
-        document.getElementById('addMemberForm').addEventListener('submit', function(e) {
+        document.getElementById('addMemberForm')?.addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Coletar dados do formulário
             const formData = new FormData(this);
+            
+            // Coletar especialidades selecionadas
+            const specialties = Array.from(document.querySelectorAll('.specialty-checkbox input:checked'))
+                .map(checkbox => checkbox.value);
+            
             const memberData = {
                 name: formData.get('name'),
                 role: formData.get('role'),
@@ -2204,26 +2635,97 @@
                 phone: formData.get('phone'),
                 experience: formData.get('experience'),
                 availability: formData.get('availability'),
-                bio: formData.get('bio'),
-                specialties: tags,
-                photo: document.querySelector('.upload-preview img')?.src
+                specialties: specialties,
+                createdAt: new Date().toISOString()
             };
-            
-            // Adicionar novo membro
-            TeamManager.addMember(memberData);
-            
-            // Limpar formulário
-            this.reset();
-            tags = [];
-            tagsContainer.innerHTML = '';
-            document.querySelector('.upload-preview').innerHTML = '<i class="ri-user-3-line"></i>';
-            
-            // Fechar modal
-            closeModal();
-            
-            // Feedback visual
-            alert('Membro adicionado com sucesso!');
+
+            // Verificar se há uma foto
+            const photoFile = document.getElementById('profilePhoto').files[0];
+            if (photoFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    memberData.photo = e.target.result;
+                    addMemberAndNotify(memberData);
+                };
+                reader.readAsDataURL(photoFile);
+            } else {
+                addMemberAndNotify(memberData);
+            }
         });
+
+        function addMemberAndNotify(memberData) {
+            // Adicionar membro
+            const newMember = TeamManager.addMember(memberData);
+            
+            // Fechar modal e resetar formulário
+            closeModal();
+            resetForm();
+            
+            // Destacar o novo cartão
+            setTimeout(() => {
+                const card = document.querySelector(`[data-id="${newMember.id}"]`);
+                if (card) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    card.style.animation = 'highlightCard 1s ease';
+                }
+            }, 100);
+        }
+
+        function resetForm() {
+            const form = document.getElementById('addMemberForm');
+            if (!form) return;
+            
+            // Limpar campos
+            form.reset();
+            
+            // Limpar checkboxes
+            document.querySelectorAll('.specialty-checkbox input').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            // Resetar preview de foto
+            const photoPreview = document.querySelector('.photo-preview');
+            if (photoPreview) {
+                photoPreview.innerHTML = '<i class="ri-user-3-line"></i>';
+            }
+        }
+
+        // Preview de Imagem
+        document.getElementById('profilePhoto')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const photoPreview = document.querySelector('.photo-preview');
+                    if (photoPreview) {
+                        photoPreview.innerHTML = `
+                            <img src="${e.target.result}" alt="Preview">
+                        `;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Adicionar animação para novo cartão
+        const style = document.createElement('style');
+        style.textContent = `
+        @keyframes highlightCard {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 245, 255, 0.4);
+            }
+            50% {
+                transform: scale(1.03);
+                box-shadow: 0 0 20px 10px rgba(0, 245, 255, 0.2);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 245, 255, 0);
+            }
+        }
+        `;
+        document.head.appendChild(style);
 
         // Atualizar estatísticas
         function updateStats() {
@@ -2292,7 +2794,7 @@
             document.body.style.overflow = '';
         }
 
-        // Gerenciamento de Tags
+        // Melhorar o gerenciamento de tags
         document.getElementById('tagInput')?.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -2308,7 +2810,10 @@
         });
 
         function renderTags() {
-            tagsContainer.innerHTML = tags.map(tag => `
+            const container = document.querySelector('.tags-container');
+            if (!container) return;
+            
+            container.innerHTML = tags.map(tag => `
                 <div class="tag">
                     ${tag}
                     <i class="ri-close-line" onclick="removeTag('${tag}')"></i>
@@ -2321,18 +2826,339 @@
             renderTags();
         }
 
-        // Preview de Imagem
-        document.getElementById('profilePhoto')?.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.querySelector('.upload-preview').innerHTML = `
-                        <img src="${e.target.result}" alt="Preview" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-                    `;
-                };
-                reader.readAsDataURL(file);
+        // Funções para o preview de foto
+        function showPhotoPreview(event, photoUrl, memberName) {
+            event.stopPropagation();
+            
+            if (!photoUrl) return;
+            
+            const modal = document.getElementById('photoPreviewModal');
+            const img = document.getElementById('photoPreviewImage');
+            
+            img.src = photoUrl;
+            img.alt = `Foto de ${memberName}`;
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePhotoPreview() {
+            const modal = document.getElementById('photoPreviewModal');
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // Event listeners para o preview de foto
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('photoPreviewModal');
+            
+            if (modal) {
+                const closeBtn = modal.querySelector('.photo-preview-close');
+                
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closePhotoPreview();
+                    }
+                });
+                
+                closeBtn?.addEventListener('click', closePhotoPreview);
+                
+                // Fechar com a tecla ESC
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        closePhotoPreview();
+                    }
+                });
             }
+            
+            // Atualizar o createMemberCard para incluir o evento de clique na foto
+            TeamManager.createMemberCard = function(member) {
+                const card = document.createElement('div');
+                card.className = 'team-card';
+                card.dataset.id = member.id;
+                
+                const initials = member.name
+                    .split(' ')
+                    .map(n => n[0])
+                    .join('')
+                    .toUpperCase()
+                    .substring(0, 2);
+                
+                card.innerHTML = `
+                    <button class="delete-member-btn" onclick="deleteMember(event, '${member.id}')" title="Excluir membro">
+                        <i class="ri-delete-bin-line"></i>
+                    </button>
+                    <div class="card-cover">
+                        <div class="member-avatar">
+                            ${member.photo ? 
+                                `<img src="${member.photo}" alt="${member.name}" style="width: 100%; height: 100%; object-fit: cover;">` :
+                                initials
+                            }
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div>
+                            <h3 class="member-name">${member.name}</h3>
+                            <div class="member-role">${member.role}</div>
+                        </div>
+                        
+                        ${member.specialties?.length ? `
+                        <div class="specialties-grid">
+                            ${member.specialties.map(specialty => `
+                                <div class="specialty-box">${specialty}</div>
+                            `).join('')}
+                        </div>
+                        ` : ''}
+                        
+                        <div class="member-info">
+                            <div class="info-item">
+                                <i class="ri-mail-line"></i>
+                                <span>${member.email}</span>
+                            </div>
+                            ${member.phone ? `
+                            <div class="info-item">
+                                <i class="ri-phone-line"></i>
+                                <span>${member.phone}</span>
+                            </div>
+                            ` : ''}
+                            <div class="info-item" style="position: relative;">
+                                <div class="availability-status ${member.availability}" onclick="toggleAvailabilityMenu(event, '${member.id}')">
+                                    <i class="ri-time-line"></i>
+                                    <span>${member.availability}</span>
+                                </div>
+                                <div class="availability-menu" id="availability-menu-${member.id}">
+                                    <div class="availability-option" onclick="updateAvailability(event, '${member.id}', 'disponivel')">
+                                        <i class="ri-checkbox-circle-line" style="color: var(--cyber-green)"></i>
+                                        Disponível
+                                    </div>
+                                    <div class="availability-option" onclick="updateAvailability(event, '${member.id}', 'ocupado')">
+                                        <i class="ri-time-line" style="color: var(--neon-purple)"></i>
+                                        Ocupado
+                                    </div>
+                                    <div class="availability-option" onclick="updateAvailability(event, '${member.id}', 'indisponivel')">
+                                        <i class="ri-close-circle-line" style="color: #ff5757"></i>
+                                        Indisponível
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Adicionar evento de clique no card
+                card.addEventListener('click', (e) => {
+                    // Se não clicou no menu de disponibilidade
+                    if (!e.target.closest('.availability-status') && !e.target.closest('.availability-menu')) {
+                        this.showMemberDetails(member.id);
+                    }
+                });
+                
+                return card;
+            };
+        });
+
+        // Adicionar ao final do arquivo:
+
+        // Funções para gerenciar disponibilidade
+        function toggleAvailabilityMenu(event, memberId) {
+            event.stopPropagation();
+            const menu = document.getElementById(`availability-menu-${memberId}`);
+            
+            // Fechar outros menus abertos
+            document.querySelectorAll('.availability-menu.show').forEach(m => {
+                if (m !== menu) m.classList.remove('show');
+            });
+            
+            menu.classList.toggle('show');
+        }
+
+        function updateAvailability(event, memberId, newStatus) {
+            event.stopPropagation();
+            event.preventDefault();
+            
+            // Atualizar o status no TeamManager
+            const member = TeamManager.getMemberById(memberId);
+            if (!member) return;
+            
+            TeamManager.updateMember(memberId, { availability: newStatus });
+            
+            // Atualizar a UI diretamente
+            const statusElement = document.querySelector(`[data-id="${memberId}"] .availability-status`);
+            if (statusElement) {
+                // Remover todas as classes de status anteriores
+                statusElement.classList.remove('disponivel', 'ocupado', 'indisponivel');
+                // Adicionar a nova classe de status
+                statusElement.classList.add(newStatus);
+                // Atualizar o texto
+                const statusText = statusElement.querySelector('span');
+                if (statusText) {
+                    statusText.textContent = newStatus;
+                }
+            }
+            
+            // Fechar o menu
+            const menu = document.getElementById(`availability-menu-${memberId}`);
+            if (menu) {
+                menu.classList.remove('show');
+            }
+        }
+
+        // Atualizar o evento de clique global para fechar menus
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.availability-status') && !event.target.closest('.availability-menu')) {
+                document.querySelectorAll('.availability-menu.show').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+
+        // Atualizar o método createMemberCard do TeamManager
+        TeamManager.createMemberCard = function(member) {
+            const card = document.createElement('div');
+            card.className = 'team-card';
+            card.dataset.id = member.id;
+            
+            const initials = member.name
+                .split(' ')
+                .map(n => n[0])
+                .join('')
+                .toUpperCase()
+                .substring(0, 2);
+            
+            card.innerHTML = `
+                <button class="delete-member-btn" onclick="deleteMember(event, '${member.id}')" title="Excluir membro">
+                    <i class="ri-delete-bin-line"></i>
+                </button>
+                <div class="card-cover">
+                    <div class="member-avatar">
+                        ${member.photo ? 
+                            `<img src="${member.photo}" alt="${member.name}" style="width: 100%; height: 100%; object-fit: cover;">` :
+                            initials
+                        }
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <h3 class="member-name">${member.name}</h3>
+                        <div class="member-role">${member.role}</div>
+                    </div>
+                    
+                    ${member.specialties?.length ? `
+                    <div class="specialties-grid">
+                        ${member.specialties.map(specialty => `
+                            <div class="specialty-box">${specialty}</div>
+                        `).join('')}
+                    </div>
+                    ` : ''}
+                    
+                    <div class="member-info">
+                        <div class="info-item">
+                            <i class="ri-mail-line"></i>
+                            <span>${member.email}</span>
+                        </div>
+                        ${member.phone ? `
+                        <div class="info-item">
+                            <i class="ri-phone-line"></i>
+                            <span>${member.phone}</span>
+                        </div>
+                        ` : ''}
+                        <div class="info-item" style="position: relative;">
+                            <div class="availability-status ${member.availability}" onclick="toggleAvailabilityMenu(event, '${member.id}')">
+                                <i class="ri-time-line"></i>
+                                <span>${member.availability}</span>
+                            </div>
+                            <div class="availability-menu" id="availability-menu-${member.id}">
+                                <div class="availability-option" onclick="updateAvailability(event, '${member.id}', 'disponivel')">
+                                    <i class="ri-checkbox-circle-line" style="color: var(--cyber-green)"></i>
+                                    Disponível
+                                </div>
+                                <div class="availability-option" onclick="updateAvailability(event, '${member.id}', 'ocupado')">
+                                    <i class="ri-time-line" style="color: var(--neon-purple)"></i>
+                                    Ocupado
+                                </div>
+                                <div class="availability-option" onclick="updateAvailability(event, '${member.id}', 'indisponivel')">
+                                    <i class="ri-close-circle-line" style="color: #ff5757"></i>
+                                    Indisponível
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Adicionar evento de clique no card
+            card.addEventListener('click', (e) => {
+                // Se não clicou no menu de disponibilidade ou no botão de deletar
+                if (!e.target.closest('.availability-status') && 
+                    !e.target.closest('.availability-menu') && 
+                    !e.target.closest('.delete-member-btn')) {
+                    this.showMemberDetails(member.id);
+                }
+            });
+            
+            return card;
+        };
+
+        // Atualizar o método updateMember do TeamManager
+        TeamManager.updateMember = function(id, memberData) {
+            const index = this.members.findIndex(m => m.id === id);
+            if (index !== -1) {
+                this.members[index] = {
+                    ...this.members[index],
+                    ...memberData,
+                    updatedAt: new Date().toISOString()
+                };
+                this.saveToStorage();
+                this.render();
+                return this.members[index];
+            }
+            return null;
+        };
+
+        // Adicionar listener para fechar menus quando clicar fora
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.availability-status') && !event.target.closest('.availability-menu')) {
+                document.querySelectorAll('.availability-menu.show').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+
+        // Fechar menus de disponibilidade quando clicar fora
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.availability-status') && !e.target.closest('.availability-menu')) {
+                document.querySelectorAll('.availability-menu.show').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+
+        // Função para deletar membro
+        function deleteMember(event, memberId) {
+            event.stopPropagation(); // Impede que o card abra ao clicar no botão de deletar
+            
+            if (confirm('Tem certeza que deseja excluir este membro da equipe?')) {
+                TeamManager.deleteMember(memberId);
+            }
+        }
+
+        // Adicionar ao final do arquivo JavaScript:
+        // Fechar menus de disponibilidade quando clicar em qualquer lugar
+        document.addEventListener('click', function(event) {
+            const isAvailabilityMenu = event.target.closest('.availability-menu');
+            const isAvailabilityStatus = event.target.closest('.availability-status');
+            
+            if (!isAvailabilityMenu && !isAvailabilityStatus) {
+                document.querySelectorAll('.availability-menu.show').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+
+        // Prevenir que o clique no menu propague para o documento
+        document.querySelectorAll('.availability-menu').forEach(menu => {
+            menu.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
         });
     </script>
 </body>
