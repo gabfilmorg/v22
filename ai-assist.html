@@ -1,20 +1,22 @@
-<!-- Bibliotecas de Processamento -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- ... (código anterior do <head>) ... -->
+
+    <!-- Bibliotecas de Processamento -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
-    <!-- Conteúdo anterior mantido -->
+    <!-- ... (código anterior do <body>) ... -->
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Configurações de AI Assist
             const AIAssistConfig = {
-                // Configurações de API
-const OPENAI_API_KEY = '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';
-const API_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
-
-console.log('API Key:', OPENAI_API_KEY);
-console.log('API Endpoint:', API_ENDPOINT);
+                // Configurações da API
+                apiKey: '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',
+                apiEndpoint: 'https://api.openai.com/v1/chat/completions',
                 
                 // Configurações de chat
                 maxMessages: 20, // Limite de mensagens no histórico
@@ -34,6 +36,66 @@ console.log('API Endpoint:', API_ENDPOINT);
                     }
                 }
             };
+
+            // ... (código anterior dos elementos DOM e gerenciamento de conversas) ...
+
+            // Enviar mensagem para API de IA
+            async function sendMessageToAI(message, mode = 'default', userStyle = 'Normal') {
+                // Adicionar mensagem do usuário
+                addMessageToChat(message);
+                
+                // Limpar input
+                chatInput.value = '';
+                
+                // Mostrar indicador de carregamento
+                const loadingSpinner = document.createElement('div');
+                loadingSpinner.classList.add('loading-spinner');
+                sendMessageBtn.appendChild(loadingSpinner);
+                sendMessageBtn.disabled = true;
+
+                try {
+                    // Preparar histórico de mensagens
+                    const history = conversationManager.getConversationHistory()
+                        .slice(-5) // Manter apenas as 5 últimas mensagens
+                        .map(item => ({
+                            role: item.type === 'user' ? 'user' : 'assistant',
+                            content: item.message
+                        }));
+
+                    const response = await axios.post(AIAssistConfig.apiEndpoint, {
+                        model: "gpt-3.5-turbo",
+                        messages: [
+                            {
+                                role: "system",
+                                content: `<userStyle>${userStyle}</userStyle>\n${AIAssistConfig.assistModes[mode].systemPrompt}`
+                            },
+                            ...history,
+                            {
+                                role: "user",
+                                content: message
+                            }
+                        ],
+                        max_tokens: AIAssistConfig.maxTokens,
+                        temperature: AIAssistConfig.temperature
+                    }, {
+                        headers: {
+                            'Authorization': `Bearer ${AIAssistConfig.apiKey}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    const aiResponse = response.data.choices[0].message.content;
+                    
+                    // Adicionar resposta da IA
+                    addMessageToChat(aiResponse, 'ai');
+                } catch (error) {
+                    // ... (tratamento de erro detalhado) ...
+                } finally {
+                    // Remover spinner e reativar botão
+                    loadingSpinner.remove();
+                    sendMessageBtn.disabled = false;
+                }
+            }
 
             // Elementos DOM
             const chatMessages = document.getElementById('chat-messages');
