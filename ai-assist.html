@@ -9,9 +9,12 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Configurações de AI Assist
             const AIAssistConfig = {
-                // Configurações da API
-                apiKey: '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', // Substitua pelo seu token real
-                apiEndpoint: 'https://api.openai.com/v1/chat/completions',
+                // Configurações de API
+const OPENAI_API_KEY = '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';
+const API_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
+
+console.log('API Key:', OPENAI_API_KEY);
+console.log('API Endpoint:', API_ENDPOINT);
                 
                 // Configurações de chat
                 maxMessages: 20, // Limite de mensagens no histórico
