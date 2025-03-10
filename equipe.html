@@ -178,6 +178,40 @@
             font-weight: 600;
         }
 
+        .team-stats {
+            display: flex;
+            gap: 20px;
+            margin: 0 20px;
+        }
+
+        .stat-card {
+            background: rgba(26, 27, 46, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 15px 20px;
+            min-width: 150px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.1);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--neon-blue);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: rgba(244, 247, 255, 0.7);
+        }
+
         .search-bar {
             display: flex;
             align-items: center;
@@ -256,6 +290,7 @@
         .filters {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .filter-select {
@@ -266,10 +301,22 @@
             border-radius: var(--border-radius);
             outline: none;
             cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
         }
 
-        .filter-select option {
-            background: var(--deep-space);
+        .filter-select:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 245, 255, 0.1);
+        }
+
+        .filter-select:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.2);
+        }
+
+        .filter-select[data-filter="sort"] {
+            border-left: 2px solid var(--neon-blue);
         }
 
         .view-options {
@@ -323,6 +370,31 @@
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            background: rgba(26, 27, 46, 0.8);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--glass-border);
+        }
+
+        .no-results i {
+            font-size: 48px;
+            color: var(--neon-blue);
+            margin-bottom: 15px;
+        }
+
+        .no-results p {
+            font-size: 16px;
+            color: rgba(244, 247, 255, 0.7);
+            margin-bottom: 20px;
+        }
+
+        .no-results .btn {
+            margin: 0 auto;
         }
 
         .team-card {
@@ -693,19 +765,18 @@
         .detail-header {
             display: flex;
             gap: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
-        /* CORREÇÃO: Avatar de detalhes com centralização corrigida */
         .detail-avatar {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             background: var(--gradient-primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 48px;
             font-weight: 600;
             color: var(--soft-white);
             line-height: 0;
@@ -716,57 +787,58 @@
         }
 
         .detail-name {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 600;
             margin-bottom: 5px;
         }
 
         .detail-role {
-            font-size: 16px;
             color: var(--neon-blue);
-            margin-bottom: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
         }
 
         .detail-meta {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
-            color: rgba(244, 247, 255, 0.7);
-            font-size: 14px;
         }
 
         .meta-item {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            color: rgba(244, 247, 255, 0.7);
         }
 
         .meta-item i {
             color: var(--neon-blue);
+            font-size: 18px;
         }
 
         .detail-section {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
         }
 
         .section-title i {
             color: var(--neon-blue);
+            font-size: 20px;
         }
 
         .section-content {
             background: rgba(26, 27, 46, 0.8);
             border-radius: var(--border-radius);
             border: 1px solid var(--glass-border);
-            padding: 15px;
+            padding: 20px;
         }
 
         .skill-tags {
@@ -776,124 +848,43 @@
         }
 
         .skill-tag {
-            padding: 5px 10px;
-            background: rgba(0, 245, 255, 0.1);
-            border-radius: 20px;
-            font-size: 12px;
             display: flex;
             align-items: center;
             gap: 5px;
-        }
-
-        .skill-tag i {
+            padding: 5px 12px;
+            background: rgba(0, 245, 255, 0.1);
+            border-radius: 20px;
+            font-size: 14px;
             color: var(--neon-blue);
         }
 
-        .project-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--glass-border);
+        .skill-tag i {
+            font-size: 16px;
         }
 
-        .project-item:last-child {
-            border-bottom: none;
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
         }
 
-        .project-info {
+        .info-grid .info-item {
             display: flex;
             flex-direction: column;
             gap: 5px;
         }
 
-        .project-name {
-            font-weight: 500;
-        }
-
-        .project-role {
-            font-size: 12px;
+        .info-grid .info-item label {
             color: rgba(244, 247, 255, 0.7);
+            font-size: 14px;
         }
 
-        .project-dates {
-            font-size: 12px;
-            color: var(--neon-blue);
+        .info-grid .info-item span {
+            font-size: 16px;
+            color: var(--soft-white);
         }
 
-        .schedule-section {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-        }
-
-        .schedule-day {
-            text-align: center;
-            font-size: 12px;
-            padding: 5px;
-            border-radius: var(--border-radius);
-            background: rgba(26, 27, 46, 0.8);
-        }
-
-        .schedule-day.available {
-            border-top: 3px solid var(--cyber-green);
-        }
-
-        .schedule-day.busy {
-            border-top: 3px solid var(--neon-purple);
-        }
-
-        .schedule-day.unavailable {
-            border-top: 3px solid #ff5757;
-        }
-
-        .notes-section {
-            background: rgba(26, 27, 46, 0.8);
-            border-radius: var(--border-radius);
-            border: 1px solid var(--glass-border);
-            padding: 15px;
-            min-height: 100px;
-            line-height: 1.5;
-        }
-
-        /* Responsividade */
         @media (max-width: 768px) {
-            .sidebar {
-                width: 0;
-            }
-
-            .sidebar:hover, .sidebar.show {
-                width: var(--sidebar-width-expanded);
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .team-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .search-bar {
-                width: 200px;
-            }
-
-            .action-bar {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-
-            .filters {
-                width: 100%;
-                flex-wrap: wrap;
-            }
-
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-
             .detail-header {
                 flex-direction: column;
                 align-items: center;
@@ -902,6 +893,386 @@
 
             .detail-meta {
                 justify-content: center;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Estilos do Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 27, 46, 0.9);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--deep-space);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--glass-border);
+            width: 90%;
+            max-width: 600px;
+            margin: 50px auto;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 20px;
+            max-height: calc(100vh - 150px);
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--soft-white);
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        /* Estilos do Formulário */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--soft-white);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            color: var(--soft-white);
+            outline: none;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .upload-area {
+            text-align: center;
+            padding: 20px;
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+            border: 2px dashed var(--glass-border);
+        }
+
+        .upload-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--deep-space);
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .tags-input {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 10px;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background: var(--gradient-primary);
+            padding: 5px 10px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tag i {
+            cursor: pointer;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Status Grid */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .status-item {
+            background: rgba(26, 27, 46, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .status-item.active {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.1);
+        }
+
+        .status-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--neon-blue);
+            margin-bottom: 5px;
+        }
+
+        .status-label {
+            font-size: 14px;
+            color: rgba(244, 247, 255, 0.7);
+        }
+
+        /* Projects List */
+        .projects-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .section-link {
+            margin-left: auto;
+            font-size: 14px;
+            color: var(--neon-blue);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .section-link:hover {
+            color: var(--soft-white);
+        }
+
+        .project-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(26, 27, 46, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--soft-white);
+        }
+
+        .project-item:hover {
+            border-color: var(--neon-blue);
+            transform: translateX(5px);
+            background: rgba(26, 27, 46, 0.9);
+        }
+
+        .project-info {
+            flex: 1;
+        }
+
+        .project-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .project-dates {
+            font-size: 12px;
+            color: rgba(244, 247, 255, 0.7);
+        }
+
+        .project-status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            text-transform: capitalize;
+        }
+
+        .project-status.em-andamento {
+            background: rgba(0, 245, 255, 0.1);
+            color: var(--neon-blue);
+        }
+
+        .project-status.concluido {
+            background: rgba(0, 255, 178, 0.1);
+            color: var(--cyber-green);
+        }
+
+        .project-status.atrasado {
+            background: rgba(255, 87, 87, 0.1);
+            color: rgb(255, 100, 100);
+        }
+
+        /* Events List */
+        .events-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .event-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(26, 27, 46, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--soft-white);
+        }
+
+        .event-item:hover {
+            border-color: var(--neon-purple);
+            transform: translateX(5px);
+            background: rgba(26, 27, 46, 0.9);
+        }
+
+        .event-info {
+            flex: 1;
+        }
+
+        .event-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .event-type {
+            font-size: 12px;
+            color: var(--neon-purple);
+            text-transform: capitalize;
+        }
+
+        .event-time {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: rgba(244, 247, 255, 0.7);
+        }
+
+        .event-time i {
+            color: var(--neon-purple);
+        }
+
+        @media (max-width: 768px) {
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project-item,
+            .event-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .project-status,
+            .event-time {
+                align-self: flex-start;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .action-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .filters {
+                width: 100%;
+            }
+
+            .filter-select {
+                flex: 1;
+                min-width: 0;
+            }
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .action-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .filters {
+                width: 100%;
+            }
+
+            .action-buttons {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .team-stats {
+                display: none;
             }
         }
     </style>
@@ -931,14 +1302,6 @@
                 <i class="menu-icon ri-camera-line"></i>
                 <span class="menu-text">Equipamentos</span>
             </a>
-            <a href="ai-assist.html" class="menu-item">
-                <i class="menu-icon ri-robot-line"></i>
-                <span class="menu-text">AI Assist</span>
-            </a>
-            <a href="analytics.html" class="menu-item">
-                <i class="menu-icon ri-bar-chart-line"></i>
-                <span class="menu-text">Analytics</span>
-            </a>
             <a href="agenda.html" class="menu-item">
                 <i class="menu-icon ri-calendar-line"></i>
                 <span class="menu-text">Agenda</span>
@@ -958,6 +1321,25 @@
     <div class="main-content">
         <div class="header">
             <h1 class="page-title">Equipe</h1>
+            
+            <div class="team-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-members">0</div>
+                    <div class="stat-label">Total de Membros</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="active-members">0</div>
+                    <div class="stat-label">Membros Disponíveis</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="active-projects">0</div>
+                    <div class="stat-label">Projetos Ativos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="upcoming-events">0</div>
+                    <div class="stat-label">Eventos Agendados</div>
+                </div>
+            </div>
             
             <div class="search-bar">
                 <i class="ri-search-line"></i>
@@ -979,41 +1361,63 @@
         <!-- Barra de ações -->
         <div class="action-bar">
             <div class="filters">
-                <select class="filter-select" id="role-filter">
-                    <option value="all">Todas as Funções</option>
-                    <option value="director">Diretor</option>
-                    <option value="cinematographer">Cinegrafista</option>
+                <select class="filter-select" data-filter="role">
+                    <option value="">Todos os Cargos</option>
+                    <option value="diretor">Diretor</option>
+                    <option value="fotografo">Fotógrafo</option>
                     <option value="editor">Editor</option>
-                    <option value="producer">Produtor</option>
-                    <option value="sound">Técnico de Som</option>
-                    <option value="assistant">Assistente</option>
+                    <option value="produtor">Produtor</option>
+                    <option value="som">Técnico de Som</option>
+                    <option value="assistente">Assistente</option>
                 </select>
                 
-                <select class="filter-select" id="availability-filter">
-                    <option value="all">Todas Disponibilidades</option>
-                    <option value="available">Disponível</option>
-                    <option value="busy">Ocupado</option>
-                    <option value="unavailable">Indisponível</option>
+                <select class="filter-select" data-filter="availability">
+                    <option value="">Todas as Disponibilidades</option>
+                    <option value="disponivel">Disponível</option>
+                    <option value="ocupado">Ocupado</option>
+                    <option value="indisponivel">Indisponível</option>
+                </select>
+
+                <select class="filter-select" data-filter="experience">
+                    <option value="">Todos os Níveis</option>
+                    <option value="junior">Júnior</option>
+                    <option value="pleno">Pleno</option>
+                    <option value="senior">Sênior</option>
+                </select>
+
+                <select class="filter-select" data-filter="specialty">
+                    <option value="">Todas as Especialidades</option>
+                    <option value="filmagem">Filmagem</option>
+                    <option value="edicao">Edição</option>
+                    <option value="iluminacao">Iluminação</option>
+                    <option value="som">Som</option>
+                    <option value="producao">Produção</option>
+                </select>
+
+                <select class="filter-select" data-filter="projectStatus">
+                    <option value="">Status do Projeto</option>
+                    <option value="em-andamento">Em Andamento</option>
+                    <option value="concluido">Concluído</option>
+                    <option value="atrasado">Atrasado</option>
                 </select>
                 
-                <select class="filter-select" id="sort-filter">
-                    <option value="name-asc">Nome (A-Z)</option>
-                    <option value="name-desc">Nome (Z-A)</option>
-                    <option value="role">Função</option>
-                    <option value="projects">Projetos</option>
+                <select class="filter-select" data-filter="sort">
+                    <option value="">Ordenar por</option>
+                    <option value="name">Nome</option>
+                    <option value="role">Cargo</option>
+                    <option value="projects">Projetos Ativos</option>
+                    <option value="events">Eventos Agendados</option>
+                    <option value="recent">Mais Recentes</option>
                 </select>
             </div>
-            
-            <div class="view-options">
-                <div class="view-option active" data-view="grid">
-                    <i class="ri-grid-fill"></i>
-                </div>
-                <div class="view-option" data-view="list">
-                    <i class="ri-list-check"></i>
-                </div>
-                
-                <button class="btn btn-primary" id="new-member-btn">
-                    <i class="ri-add-line"></i> Novo Membro
+            <div class="action-buttons">
+                <button class="btn btn-outline" onclick="TeamManager.exportTeamData()">
+                    <i class="ri-download-line"></i>
+                    Exportar Dados
+                </button>
+                <button class="btn btn-primary" onclick="openModal()">
+                    <i class="ri-user-add-line"></i>
+                    Adicionar Membro
                 </button>
             </div>
         </div>
@@ -1129,383 +1533,477 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal de Cadastro de Membro -->
+        <div class="modal" id="addMemberModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Adicionar Novo Membro</h2>
+                    <button class="close-modal"><i class="ri-close-line"></i></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addMemberForm">
+                        <div class="form-group">
+                            <label>Foto de Perfil</label>
+                            <div class="upload-area">
+                                <input type="file" id="profilePhoto" accept="image/*" hidden>
+                                <div class="upload-preview">
+                                    <i class="ri-user-3-line"></i>
+                                </div>
+                                <button type="button" class="btn btn-outline" onclick="document.getElementById('profilePhoto').click()">
+                                    <i class="ri-upload-2-line"></i> Upload Foto
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nome Completo</label>
+                                <input type="text" required placeholder="Digite o nome completo">
+                            </div>
+                            <div class="form-group">
+                                <label>Cargo</label>
+                                <input type="text" required placeholder="Ex: Diretor de Fotografia">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" required placeholder="email@exemplo.com">
+                            </div>
+                            <div class="form-group">
+                                <label>Telefone</label>
+                                <input type="tel" required placeholder="(00) 00000-0000">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Especialidades</label>
+                            <div class="tags-input">
+                                <input type="text" id="tagInput" placeholder="Digite e pressione Enter">
+                                <div class="tags-container"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nível de Experiência</label>
+                                <select required>
+                                    <option value="">Selecione</option>
+                                    <option value="junior">Júnior</option>
+                                    <option value="pleno">Pleno</option>
+                                    <option value="senior">Sênior</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Disponibilidade</label>
+                                <select required>
+                                    <option value="">Selecione</option>
+                                    <option value="integral">Tempo Integral</option>
+                                    <option value="parcial">Meio Período</option>
+                                    <option value="freelancer">Freelancer</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Biografia</label>
+                            <textarea placeholder="Uma breve descrição sobre o membro"></textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Salvar Membro</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Elementos DOM
-            const gridView = document.getElementById('grid-view');
-            const listView = document.getElementById('list-view');
-            const teamTableBody = document.getElementById('team-table-body');
-            const viewOptions = document.querySelectorAll('.view-option');
-            const searchInput = document.getElementById('search-input');
-            const roleFilter = document.getElementById('role-filter');
-            const availabilityFilter = document.getElementById('availability-filter');
-            const sortFilter = document.getElementById('sort-filter');
-            const newMemberBtn = document.getElementById('new-member-btn');
-            const memberModal = document.getElementById('member-modal');
-            const detailsModal = document.getElementById('details-modal');
-            const modalTitle = document.getElementById('modal-title');
-            const modalClose = document.getElementById('modal-close');
-            const detailsClose = document.getElementById('details-close');
-            const cancelBtn = document.getElementById('cancel-btn');
-            const saveMemberBtn = document.getElementById('save-member-btn');
-            const deleteMemberBtn = document.getElementById('delete-member-btn');
-            const memberForm = document.getElementById('member-form');
-            const memberDetails = document.getElementById('member-details');
-            const detailsEditBtn = document.getElementById('details-edit-btn');
-            const detailsCloseBtn = document.getElementById('details-close-btn');
-            const userInitialEl = document.getElementById('user-initial');
-            const userNameEl = document.getElementById('user-name');
+        // Gerenciamento de Estado e Persistência
+        const TeamManager = {
+            members: [],
+            projects: [],
+            events: [],
+            filters: {
+                role: '',
+                availability: '',
+                searchTerm: '',
+                sort: ''
+            },
             
-            // Verificar usuário logado
-            const userEmail = localStorage.getItem('userEmail');
-            if (userEmail) {
-                const initial = userEmail.charAt(0).toUpperCase();
-                userInitialEl.textContent = initial;
-                
-                // Pegar nome do usuário, se disponível
-                const users = JSON.parse(localStorage.getItem('users')) || [];
-                const user = users.find(u => u.email === userEmail);
-                if (user && user.name) {
-                    const firstName = user.name.split(' ')[0];
-                    userNameEl.textContent = firstName;
-                } else {
-                    userNameEl.textContent = userEmail.split('@')[0];
-                }
-            }
-            
-            // Estado da aplicação
-            let team = JSON.parse(localStorage.getItem('team')) || [];
-            let projects = JSON.parse(localStorage.getItem('projects')) || [];
-            let events = JSON.parse(localStorage.getItem('calendar_events')) || [];
-            let currentView = 'grid';
-            let currentMemberId = null;
-            
-            // Funções auxiliares
-            function generateId() {
-                return Math.random().toString(36).substr(2, 9);
-            }
-            
-            function getInitials(name) {
-                return name
-                    .split(' ')
-                    .map(part => part.charAt(0))
-                    .join('')
-                    .toUpperCase()
-                    .substring(0, 2);
-            }
-            
-            function getRoleLabel(role) {
-                const roles = {
-                    'director': 'Diretor',
-                    'cinematographer': 'Cinegrafista',
-                    'editor': 'Editor',
-                    'producer': 'Produtor',
-                    'sound': 'Técnico de Som',
-                    'assistant': 'Assistente'
-                };
-                
-                return roles[role] || role;
-            }
-            
-            function getAvailabilityLabel(availability) {
-                const statuses = {
-                    'available': 'Disponível',
-                    'busy': 'Ocupado',
-                    'unavailable': 'Indisponível'
-                };
-                
-                return statuses[availability] || availability;
-            }
-            
-            // Alternar entre visualizações
-            function setView(view) {
-                currentView = view;
-                
-                // Atualizar classes ativas
-                viewOptions.forEach(option => {
-                    if (option.dataset.view === view) {
-                        option.classList.add('active');
-                    } else {
-                        option.classList.remove('active');
+            // Inicializar dados e eventos
+            init() {
+                this.loadFromStorage();
+                this.loadProjects();
+                this.loadEvents();
+                this.setupEventListeners();
+                this.render();
+            },
+
+            // Configurar event listeners
+            setupEventListeners() {
+                // Listener para busca
+                document.getElementById('search-input')?.addEventListener('input', (e) => {
+                    this.filters.searchTerm = e.target.value.toLowerCase();
+                    this.render();
+                });
+
+                // Listeners para filtros
+                document.querySelectorAll('.filter-select').forEach(select => {
+                    select.addEventListener('change', (e) => {
+                        const filterType = e.target.dataset.filter;
+                        this.filters[filterType] = e.target.value;
+                        this.render();
+                    });
+                });
+            },
+
+            // Busca avançada com filtros combinados
+            advancedSearch() {
+                return this.members.filter(member => {
+                    // Filtro por termo de busca em múltiplos campos
+                    const searchMatch = !this.filters.searchTerm || [
+                        member.name,
+                        member.role,
+                        member.email,
+                        member.phone,
+                        member.bio,
+                        ...(member.specialties || [])
+                    ].some(field => field?.toLowerCase().includes(this.filters.searchTerm));
+
+                    // Filtro por cargo
+                    const roleMatch = !this.filters.role || member.role.toLowerCase() === this.filters.role.toLowerCase();
+
+                    // Filtro por disponibilidade
+                    const availabilityMatch = !this.filters.availability || member.availability.toLowerCase() === this.filters.availability.toLowerCase();
+
+                    // Filtro por nível de experiência
+                    const experienceMatch = !this.filters.experience || member.experience === this.filters.experience;
+
+                    // Filtro por especialidades
+                    const specialtiesMatch = !this.filters.specialty || 
+                        (member.specialties && member.specialties.includes(this.filters.specialty));
+
+                    // Filtro por status de projeto
+                    const projectStatusMatch = !this.filters.projectStatus || 
+                        this.getMemberProjects(member.id).some(p => p.status === this.filters.projectStatus);
+
+                    return searchMatch && 
+                           roleMatch && 
+                           availabilityMatch && 
+                           experienceMatch && 
+                           specialtiesMatch && 
+                           projectStatusMatch;
+                });
+            },
+
+            // Atualizar o método filterMembers para usar a busca avançada
+            filterMembers() {
+                const filteredMembers = this.advancedSearch();
+                return this.sortMembers(filteredMembers);
+            },
+
+            // Ordenar membros
+            sortMembers(members) {
+                if (!this.filters.sort) return members;
+
+                return [...members].sort((a, b) => {
+                    switch (this.filters.sort) {
+                        case 'name':
+                            return a.name.localeCompare(b.name);
+                        
+                        case 'role':
+                            return a.role.localeCompare(b.role);
+                        
+                        case 'projects':
+                            const aProjects = this.getMemberProjects(a.id).length;
+                            const bProjects = this.getMemberProjects(b.id).length;
+                            return bProjects - aProjects;
+                        
+                        case 'events':
+                            const aEvents = this.getMemberEvents(a.id).length;
+                            const bEvents = this.getMemberEvents(b.id).length;
+                            return bEvents - aEvents;
+                        
+                        case 'recent':
+                            return new Date(b.createdAt) - new Date(a.createdAt);
+                        
+                        default:
+                            return 0;
                     }
                 });
+            },
+
+            // Renderizar lista de membros
+            render() {
+                const container = document.querySelector('.team-grid');
+                if (!container) return;
                 
-                // Mostrar visualização selecionada
-                if (view === 'grid') {
-                    gridView.style.display = 'grid';
-                    listView.style.display = 'none';
-                } else {
-                    gridView.style.display = 'none';
-                    listView.style.display = 'block';
-                }
-            }
-            
-            // Renderizar membros da equipe
-            function renderTeam() {
-                // Limpar visualizações
-                gridView.innerHTML = '';
-                teamTableBody.innerHTML = '';
+                // Limpar container
+                container.innerHTML = '';
                 
-                // Filtrar e ordenar membros
-                let filteredMembers = [...team];
+                // Filtrar membros
+                let filteredMembers = this.filterMembers();
                 
-                // Aplicar filtro de busca
-                const searchTerm = searchInput.value.toLowerCase().trim();
-                if (searchTerm) {
-                    filteredMembers = filteredMembers.filter(member => 
-                        member.name.toLowerCase().includes(searchTerm) || 
-                        member.email.toLowerCase().includes(searchTerm) ||
-                        getRoleLabel(member.role).toLowerCase().includes(searchTerm)
-                    );
-                }
+                // Ordenar membros
+                filteredMembers = this.sortMembers(filteredMembers);
                 
-                // Aplicar filtro de função
-                const roleValue = roleFilter.value;
-                if (roleValue !== 'all') {
-                    filteredMembers = filteredMembers.filter(member => member.role === roleValue);
-                }
-                
-                // Aplicar filtro de disponibilidade
-                const availabilityValue = availabilityFilter.value;
-                if (availabilityValue !== 'all') {
-                    filteredMembers = filteredMembers.filter(member => member.availability === availabilityValue);
-                }
-                
-                // Aplicar ordenação
-                const sortValue = sortFilter.value;
-                switch (sortValue) {
-                    case 'name-asc':
-                        filteredMembers.sort((a, b) => a.name.localeCompare(b.name));
-                        break;
-                    case 'name-desc':
-                        filteredMembers.sort((a, b) => b.name.localeCompare(a.name));
-                        break;
-                    case 'role':
-                        filteredMembers.sort((a, b) => a.role.localeCompare(b.role));
-                        break;
-                    case 'projects':
-                        filteredMembers.sort((a, b) => {
-                            const projectsA = getProjectsForMember(a.id).length;
-                            const projectsB = getProjectsForMember(b.id).length;
-                            return projectsB - projectsA;
-                        });
-                        break;
-                }
-                
-                // Mostrar mensagem se não houver membros
                 if (filteredMembers.length === 0) {
-                    const emptyMessage = document.createElement('div');
-                    emptyMessage.style.gridColumn = '1/-1';
-                    emptyMessage.style.textAlign = 'center';
-                    emptyMessage.style.padding = '50px 0';
-                    emptyMessage.innerHTML = `
-                        <i class="ri-team-line" style="font-size: 48px; color: var(--neon-blue);"></i>
-                        <h3 style="margin: 15px 0;">Nenhum membro encontrado</h3>
-                        <p style="margin-bottom: 20px;">Adicione membros à sua equipe ou ajuste seus filtros</p>
-                        <button class="btn btn-primary" id="empty-new-member">
-                            <i class="ri-add-line"></i> Novo Membro
-                        </button>
+                    container.innerHTML = `
+                        <div class="no-results">
+                            <i class="ri-search-line"></i>
+                            <p>Nenhum membro encontrado com os filtros atuais</p>
+                            <button class="btn btn-outline" onclick="TeamManager.clearFilters()">
+                                Limpar Filtros
+                            </button>
+                        </div>
                     `;
-                    
-                    gridView.appendChild(emptyMessage);
-                    
-                    const emptyTableRow = document.createElement('tr');
-                    emptyTableRow.innerHTML = `
-                        <td colspan="6" style="text-align: center; padding: 30px;">
-                            <i class="ri-team-line" style="font-size: 48px; color: var(--neon-blue);"></i>
-                            <h3 style="margin: 15px 0;">Nenhum membro encontrado</h3>
-                            <p>Adicione membros à sua equipe ou ajuste seus filtros</p>
-                        </td>
-                    `;
-                    
-                    teamTableBody.appendChild(emptyTableRow);
-                    
-                    document.getElementById('empty-new-member')?.addEventListener('click', () => {
-                        newMember();
-                    });
-                    
                     return;
                 }
                 
-                // Renderizar membros em ambas visualizações
+                // Renderizar cada membro
                 filteredMembers.forEach(member => {
-                    // Grid View Card
-                    const memberCard = document.createElement('div');
-                    memberCard.className = 'team-card';
-                    memberCard.dataset.id = member.id;
-                    
-                    const skills = member.skills ? member.skills.split(',').map(skill => skill.trim()) : [];
-                    const projectCount = getProjectsForMember(member.id).length;
-                    const eventsCount = getEventsForMember(member.id).length;
-                    
-                    memberCard.innerHTML = `
-                        <div class="card-cover"></div>
-                        <div class="member-avatar">${getInitials(member.name)}</div>
-                        <div class="card-body">
-                            <h3 class="member-name">${member.name}</h3>
-                            <div class="member-role">${getRoleLabel(member.role)}</div>
-                            
-                            <div class="member-info">
-                                <div class="info-item">
-                                    <i class="ri-mail-line"></i>
-                                    <span>${member.email}</span>
-                                </div>
-                                ${member.phone ? `
-                                <div class="info-item">
-                                    <i class="ri-phone-line"></i>
-                                    <span>${member.phone}</span>
-                                </div>
-                                ` : ''}
-                                <div class="info-item">
-                                    <i class="ri-time-line"></i>
-                                    <span>${getAvailabilityLabel(member.availability)}</span>
-                                </div>
+                    const card = this.createMemberCard(member);
+                    container.appendChild(card);
+                });
+            },
+
+            // Limpar todos os filtros
+            clearFilters() {
+                this.filters = {
+                    role: '',
+                    availability: '',
+                    searchTerm: '',
+                    sort: ''
+                };
+                
+                // Resetar elementos do DOM
+                document.getElementById('search-input').value = '';
+                document.querySelectorAll('.filter-select').forEach(select => {
+                    select.value = '';
+                });
+                
+                this.render();
+            },
+            
+            // Carregar dados do localStorage
+            loadFromStorage() {
+                try {
+                    const stored = localStorage.getItem('team_members');
+                    this.members = stored ? JSON.parse(stored) : [];
+                } catch (error) {
+                    console.error('Erro ao carregar dados:', error);
+                    this.members = [];
+                }
+            },
+            
+            // Carregar projetos do localStorage
+            loadProjects() {
+                try {
+                    const stored = localStorage.getItem('projects');
+                    this.projects = stored ? JSON.parse(stored) : [];
+                } catch (error) {
+                    console.error('Erro ao carregar projetos:', error);
+                    this.projects = [];
+                }
+            },
+            
+            // Carregar eventos do localStorage
+            loadEvents() {
+                try {
+                    const stored = localStorage.getItem('calendar_events');
+                    this.events = stored ? JSON.parse(stored) : [];
+                } catch (error) {
+                    console.error('Erro ao carregar eventos:', error);
+                    this.events = [];
+                }
+            },
+            
+            // Obter projetos de um membro
+            getMemberProjects(memberId) {
+                return this.projects.filter(project => 
+                    project.team && project.team.includes(memberId)
+                );
+            },
+            
+            // Obter eventos de um membro
+            getMemberEvents(memberId) {
+                return this.events.filter(event => 
+                    event.team && event.team.includes(memberId)
+                );
+            },
+            
+            // Obter disponibilidade do membro
+            getMemberAvailability(memberId) {
+                const member = this.getMemberById(memberId);
+                if (!member) return null;
+
+                const events = this.getMemberEvents(memberId);
+                const projects = this.getMemberProjects(memberId);
+                
+                // Calcular disponibilidade baseada em eventos e projetos
+                const today = new Date();
+                const activeProjects = projects.filter(project => {
+                    const endDate = project.endDate ? new Date(project.endDate) : null;
+                    return !endDate || endDate > today;
+                });
+                
+                const upcomingEvents = events.filter(event => {
+                    const eventDate = new Date(event.startDate);
+                    return eventDate >= today;
+                });
+                
+                return {
+                    projects: activeProjects.length,
+                    events: upcomingEvents.length,
+                    status: member.availability,
+                    nextEvent: upcomingEvents[0],
+                    currentProject: activeProjects[0]
+                };
+            },
+            
+            // Salvar dados no localStorage
+            saveToStorage() {
+                try {
+                    localStorage.setItem('team_members', JSON.stringify(this.members));
+                } catch (error) {
+                    console.error('Erro ao salvar dados:', error);
+                }
+            },
+            
+            // Adicionar novo membro
+            addMember(memberData) {
+                const newMember = {
+                    id: Date.now().toString(),
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    ...memberData
+                };
+                
+                this.members.push(newMember);
+                this.saveToStorage();
+                this.render();
+                return newMember;
+            },
+            
+            // Atualizar membro existente
+            updateMember(id, memberData) {
+                const index = this.members.findIndex(m => m.id === id);
+                if (index !== -1) {
+                    this.members[index] = {
+                        ...this.members[index],
+                        ...memberData,
+                        updatedAt: new Date().toISOString()
+                    };
+                    this.saveToStorage();
+                    this.render();
+                    return this.members[index];
+                }
+                return null;
+            },
+            
+            // Remover membro
+            deleteMember(id) {
+                this.members = this.members.filter(m => m.id !== id);
+                this.saveToStorage();
+                this.render();
+            },
+            
+            // Buscar membro por ID
+            getMemberById(id) {
+                return this.members.find(m => m.id === id);
+            },
+            
+            // Criar card de membro
+            createMemberCard(member) {
+                const card = document.createElement('div');
+                card.className = 'team-card';
+                card.dataset.id = member.id;
+                
+                const initials = member.name
+                    .split(' ')
+                    .map(n => n[0])
+                    .join('')
+                    .toUpperCase()
+                    .substring(0, 2);
+                
+                card.innerHTML = `
+                    <div class="card-cover"></div>
+                    <div class="member-avatar">
+                        ${member.photo ? 
+                            `<img src="${member.photo}" alt="${member.name}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">` :
+                            initials
+                        }
+                    </div>
+                    <div class="card-body">
+                        <h3 class="member-name">${member.name}</h3>
+                        <div class="member-role">${member.role}</div>
+                        
+                        <div class="member-info">
+                            <div class="info-item">
+                                <i class="ri-mail-line"></i>
+                                <span>${member.email}</span>
                             </div>
-                            
-                            <div class="member-stats">
-                                <div class="stat-item">
-                                    <div class="stat-value">${projectCount}</div>
-                                    <div class="stat-label">Projetos</div>
-                                </div>
-                                <div class="stat-item">
-                                    <div class="stat-value">${eventsCount}</div>
-                                    <div class="stat-label">Eventos</div>
-                                </div>
-                                <div class="stat-item">
-                                    <div class="stat-value">${skills.length}</div>
-                                    <div class="stat-label">Habilidades</div>
-                                </div>
-                            </div>
-                            
-                            ${skills.length > 0 ? `
-                            <div class="card-tags">
-                                ${skills.slice(0, 3).map(skill => `
-                                    <div class="member-tag">${skill}</div>
-                                `).join('')}
-                                ${skills.length > 3 ? `
-                                    <div class="member-tag">+${skills.length - 3}</div>
-                                ` : ''}
+                            ${member.phone ? `
+                            <div class="info-item">
+                                <i class="ri-phone-line"></i>
+                                <span>${member.phone}</span>
                             </div>
                             ` : ''}
+                            <div class="info-item">
+                                <i class="ri-time-line"></i>
+                                <span>${member.availability}</span>
+                            </div>
                         </div>
-                    `;
-                    
-                    memberCard.addEventListener('click', () => {
-                        showMemberDetails(member.id);
-                    });
-                    
-                    gridView.appendChild(memberCard);
-                    
-                    // List View Row
-                    const tableRow = document.createElement('tr');
-                    tableRow.dataset.id = member.id;
-                    
-                    tableRow.innerHTML = `
-                        <td>
-                            <div class="member-cell">
-                                <div class="list-avatar">${getInitials(member.name)}</div>
-                                <div>
-                                    <div style="font-weight: 500;">${member.name}</div>
-                                    <div style="font-size: 12px; color: rgba(244, 247, 255, 0.7);">${member.email}</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>${getRoleLabel(member.role)}</td>
-                        <td>${member.phone || '-'}</td>
-                        <td>
-                            <span>
-                                <span class="availability-indicator ${member.availability}"></span>
-                                ${getAvailabilityLabel(member.availability)}
-                            </span>
-                        </td>
-                        <td>${projectCount}</td>
-                        <td>
-                            <div class="action-cell">
-                                <button class="action-btn view-btn" data-id="${member.id}">
-                                    <i class="ri-eye-line"></i>
-                                </button>
-                                <button class="action-btn edit-btn" data-id="${member.id}">
-                                    <i class="ri-edit-line"></i>
-                                </button>
-                                <button class="action-btn delete-btn" data-id="${member.id}">
-                                    <i class="ri-delete-bin-line"></i>
-                                </button>
-                            </div>
-                        </td>
-                    `;
-                    
-                    tableRow.addEventListener('click', (e) => {
-                        if (!e.target.closest('.action-btn')) {
-                            showMemberDetails(member.id);
-                        }
-                    });
-                    
-                    teamTableBody.appendChild(tableRow);
+                        
+                        ${member.specialties?.length ? `
+                        <div class="card-tags">
+                            ${member.specialties.slice(0, 3).map(specialty => `
+                                <div class="member-tag">${specialty}</div>
+                            `).join('')}
+                            ${member.specialties.length > 3 ? `
+                                <div class="member-tag">+${member.specialties.length - 3}</div>
+                            ` : ''}
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+                
+                // Adicionar eventos
+                card.addEventListener('click', () => {
+                    this.showMemberDetails(member.id);
                 });
                 
-                // Adicionar event listeners para botões na visualização de lista
-                document.querySelectorAll('.view-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        showMemberDetails(btn.dataset.id);
-                    });
-                });
-                
-                document.querySelectorAll('.edit-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        editMember(btn.dataset.id);
-                    });
-                });
-                
-                document.querySelectorAll('.delete-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        if (confirm('Tem certeza que deseja excluir este membro?')) {
-                            deleteMember(btn.dataset.id);
-                        }
-                    });
-                });
-            }
+                return card;
+            },
             
-            // Obter projetos relacionados a um membro
-            function getProjectsForMember(memberId) {
-                // Em uma aplicação real, isso viria de uma relação no banco de dados
-                // Aqui estamos simulando essa relação
-                return projects.filter(project => {
-                    // Verifica se o membro está associado ao projeto
-                    return project.team && project.team.includes(memberId);
-                });
-            }
-            
-            // Obter eventos relacionados a um membro
-            function getEventsForMember(memberId) {
-                // Em uma aplicação real, isso viria de uma relação no banco de dados
-                return events.filter(event => {
-                    // Verifica se o membro está associado ao evento
-                    return event.team && event.team.includes(memberId);
-                });
-            }
-            
-            // Mostrar detalhes do membro
-            function showMemberDetails(id) {
-                const member = team.find(m => m.id === id);
+            // Mostrar detalhes do membro (atualizado com projetos e eventos)
+            showMemberDetails(id) {
+                const member = this.getMemberById(id);
                 if (!member) return;
                 
-                // Preparar dados relacionados
-                const memberProjects = getProjectsForMember(id);
-                const memberEvents = getEventsForMember(id);
-                const skills = member.skills ? member.skills.split(',').map(skill => skill.trim()).filter(Boolean) : [];
+                const availability = this.getMemberAvailability(id);
+                const memberProjects = this.getMemberProjects(id);
+                const memberEvents = this.getMemberEvents(id);
                 
-                // Preencher modal de detalhes
+                const detailsModal = document.getElementById('details-modal');
+                const memberDetails = document.getElementById('member-details');
+                
                 memberDetails.innerHTML = `
                     <div class="detail-header">
-                        <div class="detail-avatar">${getInitials(member.name)}</div>
+                        <div class="detail-avatar">
+                            ${member.photo ? 
+                                `<img src="${member.photo}" alt="${member.name}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">` :
+                                member.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2)
+                            }
+                        </div>
                         <div class="detail-info">
                             <h2 class="detail-name">${member.name}</h2>
-                            <div class="detail-role">${getRoleLabel(member.role)}</div>
+                            <div class="detail-role">${member.role}</div>
                             
                             <div class="detail-meta">
                                 <div class="meta-item">
@@ -1520,389 +2018,320 @@
                                 ` : ''}
                                 <div class="meta-item">
                                     <i class="ri-time-line"></i>
-                                    <span>${getAvailabilityLabel(member.availability)}</span>
+                                    <span>${availability.status}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
+                    <div class="detail-section">
+                        <h3 class="section-title">
+                            <i class="ri-dashboard-line"></i>
+                            Status Atual
+                        </h3>
+                        <div class="section-content">
+                            <div class="status-grid">
+                                <div class="status-item ${availability.projects > 0 ? 'active' : ''}">
+                                    <div class="status-value">${availability.projects}</div>
+                                    <div class="status-label">Projetos Ativos</div>
+                                </div>
+                                <div class="status-item ${availability.events > 0 ? 'active' : ''}">
+                                    <div class="status-value">${availability.events}</div>
+                                    <div class="status-label">Eventos Agendados</div>
+                                </div>
+                                <div class="status-item">
+                                    <div class="status-value">${member.experience || '-'}</div>
+                                    <div class="status-label">Nível</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    ${member.specialties?.length ? `
                     <div class="detail-section">
                         <h3 class="section-title">
                             <i class="ri-tools-line"></i>
-                            Habilidades
+                            Especialidades
                         </h3>
                         <div class="section-content">
-                            ${skills.length > 0 ? `
                             <div class="skill-tags">
-                                ${skills.map(skill => `
+                                ${member.specialties.map(specialty => `
                                     <div class="skill-tag">
                                         <i class="ri-check-line"></i>
-                                        ${skill}
+                                        ${specialty}
                                     </div>
                                 `).join('')}
                             </div>
-                            ` : `
-                            <p style="color: rgba(244, 247, 255, 0.7); font-style: italic;">
-                                Nenhuma habilidade cadastrada
-                            </p>
-                            `}
-                        </div>
-                    </div>
-                    
-                    <div class="detail-section">
-                        <h3 class="section-title">
-                            <i class="ri-movie-line"></i>
-                            Projetos Ativos
-                        </h3>
-                        <div class="section-content">
-                            ${memberProjects.length > 0 ? `
-                            ${memberProjects.map(project => `
-                                <div class="project-item">
-                                    <div class="project-info">
-                                        <div class="project-name">${project.title}</div>
-                                        <div class="project-role">${getRoleLabel(member.role)}</div>
-                                    </div>
-                                    <div class="project-dates">
-                                        ${new Date(project.startDate).toLocaleDateString('pt-BR')} - 
-                                        ${project.endDate ? new Date(project.endDate).toLocaleDateString('pt-BR') : 'Em andamento'}
-                                    </div>
-                                </div>
-                            `).join('')}
-                            ` : `
-                            <p style="color: rgba(244, 247, 255, 0.7); font-style: italic;">
-                                Nenhum projeto ativo
-                            </p>
-                            `}
-                        </div>
-                    </div>
-                    
-                    <div class="detail-section">
-                        <h3 class="section-title">
-                            <i class="ri-calendar-line"></i>
-                            Disponibilidade Semanal
-                        </h3>
-                        <div class="section-content">
-                            <div class="schedule-section">
-                                <div class="schedule-day ${['unavailable', 'available', 'available', 'available', 'available', 'available', 'busy'][0]}">
-                                    Dom
-                                </div>
-                                <div class="schedule-day ${['unavailable', 'available', 'available', 'available', 'available', 'available', 'busy'][1]}">
-                                    Seg
-                                </div>
-                                <div class="schedule-day ${['unavailable', 'available', 'available', 'available', 'available', 'available', 'busy'][2]}">
-                                    Ter
-                                </div>
-                                <div class="schedule-day ${['unavailable', 'available', 'available', 'available', 'available', 'available', 'busy'][3]}">
-                                    Qua
-                                </div>
-                                <div class="schedule-day ${['unavailable', 'available', 'available', 'available', 'available', 'available', 'busy'][4]}">
-                                    Qui
-                                </div>
-                                <div class="schedule-day ${['unavailable', 'available', 'available', 'available', 'available', 'available', 'busy'][5]}">
-                                    Sex
-                                </div>
-                                <div class="schedule-day ${['unavailable', 'available', 'available', 'available', 'available', 'available', 'busy'][6]}">
-                                    Sáb
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    ${member.notes ? `
-                    <div class="detail-section">
-                        <h3 class="section-title">
-                            <i class="ri-file-text-line"></i>
-                            Observações
-                        </h3>
-                        <div class="notes-section">
-                            ${member.notes}
                         </div>
                     </div>
                     ` : ''}
                     
+                    ${memberProjects.length > 0 ? `
                     <div class="detail-section">
                         <h3 class="section-title">
-                            <i class="ri-calendar-check-line"></i>
-                            Próximos Eventos
+                            <i class="ri-movie-line"></i>
+                            Projetos Ativos
+                            <a href="projetos.html" class="section-link">Ver Todos</a>
                         </h3>
                         <div class="section-content">
-                            ${memberEvents.length > 0 ? `
-                            ${memberEvents.slice(0, 3).map(event => `
-                                <div class="project-item">
-                                    <div class="project-info">
-                                        <div class="project-name">${event.title}</div>
-                                        <div class="project-role">${event.type === 'filming' ? 'Filmagem' : event.type === 'meeting' ? 'Reunião' : 'Evento'}</div>
-                                    </div>
-                                    <div class="project-dates">
-                                        ${new Date(event.startDate).toLocaleDateString('pt-BR')} ${event.startTime}
-                                    </div>
-                                </div>
-                            `).join('')}
-                            ` : `
-                            <p style="color: rgba(244, 247, 255, 0.7); font-style: italic;">
-                                Nenhum evento agendado
-                            </p>
-                            `}
+                            <div class="projects-list">
+                                ${memberProjects.map(project => `
+                                    <a href="projetos.html?id=${project.id}" class="project-item">
+                                        <div class="project-info">
+                                            <div class="project-name">${project.title}</div>
+                                            <div class="project-dates">
+                                                ${new Date(project.startDate).toLocaleDateString('pt-BR')} - 
+                                                ${project.endDate ? new Date(project.endDate).toLocaleDateString('pt-BR') : 'Em andamento'}
+                                            </div>
+                                        </div>
+                                        <div class="project-status ${project.status}">
+                                            ${project.status}
+                                        </div>
+                                    </a>
+                                `).join('')}
+                            </div>
                         </div>
                     </div>
+                    ` : ''}
+                    
+                    ${memberEvents.length > 0 ? `
+                    <div class="detail-section">
+                        <h3 class="section-title">
+                            <i class="ri-calendar-line"></i>
+                            Próximos Eventos
+                            <a href="agenda.html" class="section-link">Ver Todos</a>
+                        </h3>
+                        <div class="section-content">
+                            <div class="events-list">
+                                ${memberEvents.slice(0, 3).map(event => `
+                                    <a href="agenda.html?id=${event.id}" class="event-item">
+                                        <div class="event-info">
+                                            <div class="event-name">${event.title}</div>
+                                            <div class="event-type">${event.type}</div>
+                                        </div>
+                                        <div class="event-time">
+                                            <i class="ri-time-line"></i>
+                                            ${new Date(event.startDate).toLocaleDateString('pt-BR')} ${event.startTime}
+                                        </div>
+                                    </a>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    ${member.bio ? `
+                    <div class="detail-section">
+                        <h3 class="section-title">
+                            <i class="ri-file-text-line"></i>
+                            Biografia
+                        </h3>
+                        <div class="section-content">
+                            <p>${member.bio}</p>
+                        </div>
+                    </div>
+                    ` : ''}
                 `;
                 
-                // Configurar botões
-                detailsEditBtn.dataset.id = id;
-                
-                // Mostrar modal
                 detailsModal.classList.add('show');
                 document.body.style.overflow = 'hidden';
-            }
-            
-            // Criar novo membro
-            function newMember() {
-                currentMemberId = null;
-                modalTitle.textContent = 'Novo Membro';
-                deleteMemberBtn.style.display = 'none';
+            },
+
+            // Exportar dados da equipe
+            exportTeamData(format = 'csv') {
+                const members = this.filterMembers();
                 
-                // Limpar formulário
-                memberForm.reset();
-                
-                // Abrir modal
-                memberModal.classList.add('show');
-                document.body.style.overflow = 'hidden';
-            }
-            
-            // Editar membro existente
-            function editMember(id) {
-                const member = team.find(m => m.id === id);
-                if (!member) return;
-                
-                currentMemberId = id;
-                modalTitle.textContent = 'Editar Membro';
-                deleteMemberBtn.style.display = 'block';
-                
-                // Preencher formulário
-                document.getElementById('member-name').value = member.name;
-                document.getElementById('member-role').value = member.role;
-                document.getElementById('member-email').value = member.email;
-                document.getElementById('member-phone').value = member.phone || '';
-                document.getElementById('member-skills').value = member.skills || '';
-                document.getElementById('member-availability').value = member.availability;
-                document.getElementById('member-notes').value = member.notes || '';
-                
-                // Abrir modal
-                memberModal.classList.add('show');
-                document.body.style.overflow = 'hidden';
-            }
-            
-            // Salvar membro
-            function saveMember() {
-                const name = document.getElementById('member-name').value.trim();
-                const role = document.getElementById('member-role').value;
-                const email = document.getElementById('member-email').value.trim();
-                const phone = document.getElementById('member-phone').value.trim();
-                const skills = document.getElementById('member-skills').value.trim();
-                const availability = document.getElementById('member-availability').value;
-                const notes = document.getElementById('member-notes').value.trim();
-                
-                // Validação básica
-                if (!name || !role || !email || !availability) {
-                    alert('Por favor, preencha todos os campos obrigatórios.');
-                    return;
-                }
-                
-                // Validar email
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(email)) {
-                    alert('Por favor, informe um email válido.');
-                    return;
-                }
-                
-                // Criar objeto do membro
-                const memberData = {
-                    name,
-                    role,
-                    email,
-                    phone,
-                    skills,
-                    availability,
-                    notes
-                };
-                
-                if (currentMemberId) {
-                    // Atualizar membro existente
-                    const index = team.findIndex(m => m.id === currentMemberId);
-                    if (index !== -1) {
-                        team[index] = {
-                            ...team[index],
-                            ...memberData,
-                            updatedAt: new Date().toISOString()
-                        };
-                    }
-                } else {
-                    // Criar novo membro
-                    const newMember = {
-                        id: generateId(),
-                        ...memberData,
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
-                    };
+                if (format === 'csv') {
+                    const headers = ['Nome', 'Cargo', 'Email', 'Telefone', 'Disponibilidade', 'Experiência', 'Especialidades', 'Projetos Ativos', 'Eventos Agendados'];
+                    const rows = members.map(member => {
+                        const memberProjects = this.getMemberProjects(member.id);
+                        const memberEvents = this.getMemberEvents(member.id);
+                        
+                        return [
+                            member.name,
+                            member.role,
+                            member.email,
+                            member.phone || '',
+                            member.availability,
+                            member.experience || '',
+                            (member.specialties || []).join('; '),
+                            memberProjects.length,
+                            memberEvents.length
+                        ];
+                    });
                     
-                    team.push(newMember);
+                    const csvContent = [
+                        headers.join(','),
+                        ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+                    ].join('\n');
+                    
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `equipe_${new Date().toISOString().split('T')[0]}.csv`;
+                    link.click();
                 }
-                
-                // Salvar alterações e atualizar UI
-                localStorage.setItem('team', JSON.stringify(team));
-                closeModal();
-                renderTeam();
             }
+        };
+
+        // Inicializar gerenciamento de membros
+        document.addEventListener('DOMContentLoaded', () => {
+            TeamManager.init();
+
+            // Event listeners para fechar modais
+            document.getElementById('details-close')?.addEventListener('click', () => {
+                document.getElementById('details-modal').classList.remove('show');
+                document.body.style.overflow = '';
+            });
+
+            document.getElementById('details-modal')?.addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) {
+                    e.target.classList.remove('show');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        // Atualizar manipulação do formulário
+        document.getElementById('addMemberForm').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            // Excluir membro
-            function deleteMember(id) {
-                team = team.filter(m => m.id !== id);
-                localStorage.setItem('team', JSON.stringify(team));
-                
-                // Fechar modal se estiver aberto
-                if (memberModal.classList.contains('show')) {
-                    closeModal();
-                }
-                
-                renderTeam();
-            }
+            const formData = new FormData(this);
+            const memberData = {
+                name: formData.get('name'),
+                role: formData.get('role'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                experience: formData.get('experience'),
+                availability: formData.get('availability'),
+                bio: formData.get('bio'),
+                specialties: tags,
+                photo: document.querySelector('.upload-preview img')?.src
+            };
+            
+            // Adicionar novo membro
+            TeamManager.addMember(memberData);
+            
+            // Limpar formulário
+            this.reset();
+            tags = [];
+            tagsContainer.innerHTML = '';
+            document.querySelector('.upload-preview').innerHTML = '<i class="ri-user-3-line"></i>';
             
             // Fechar modal
-            function closeModal() {
-                memberModal.classList.remove('show');
-                detailsModal.classList.remove('show');
-                document.body.style.overflow = '';
-                currentMemberId = null;
-            }
+            closeModal();
             
-            // Event Listeners
-            viewOptions.forEach(option => {
-                option.addEventListener('click', () => {
-                    setView(option.dataset.view);
-                });
-            });
+            // Feedback visual
+            alert('Membro adicionado com sucesso!');
+        });
+
+        // Atualizar estatísticas
+        function updateStats() {
+            const totalMembers = TeamManager.members.length;
+            const availableMembers = TeamManager.members.filter(m => m.availability === 'disponivel').length;
             
-            searchInput.addEventListener('input', renderTeam);
-            roleFilter.addEventListener('change', renderTeam);
-            availabilityFilter.addEventListener('change', renderTeam);
-            sortFilter.addEventListener('change', renderTeam);
+            const activeProjects = new Set(
+                TeamManager.members.flatMap(m => 
+                    TeamManager.getMemberProjects(m.id)
+                        .filter(p => p.status === 'em-andamento')
+                )
+            ).size;
             
-            newMemberBtn.addEventListener('click', newMember);
+            const upcomingEvents = new Set(
+                TeamManager.members.flatMap(m => 
+                    TeamManager.getMemberEvents(m.id)
+                        .filter(e => new Date(e.startDate) > new Date())
+                )
+            ).size;
             
-            modalClose.addEventListener('click', closeModal);
-            detailsClose.addEventListener('click', closeModal);
-            cancelBtn.addEventListener('click', closeModal);
-            detailsCloseBtn.addEventListener('click', closeModal);
-            
-            saveMemberBtn.addEventListener('click', saveMember);
-            
-            deleteMemberBtn.addEventListener('click', () => {
-                if (confirm('Tem certeza que deseja excluir este membro?')) {
-                    deleteMember(currentMemberId);
-                }
-            });
-            
-            detailsEditBtn.addEventListener('click', (e) => {
-                const memberId = e.target.dataset.id;
-                closeModal();
-                editMember(memberId);
-            });
-            
-            // Fechar modal ao clicar fora
-            memberModal.addEventListener('click', function(e) {
-                if (e.target === memberModal) {
-                    closeModal();
-                }
-            });
-            
-            detailsModal.addEventListener('click', function(e) {
-                if (e.target === detailsModal) {
-                    closeModal();
-                }
-            });
-            
-            // Inicialização
-            renderTeam();
-            
-            // Adicionar membros de exemplo se não houver nenhum
-            if (team.length === 0) {
-                const sampleMembers = [
-                    {
-                        id: generateId(),
-                        name: 'João Silva',
-                        role: 'director',
-                        email: 'joao.silva@exemplo.com',
-                        phone: '(11) 98765-4321',
-                        skills: 'Direção, Roteiro, Produção',
-                        availability: 'available',
-                        notes: 'Especialista em documentários e produções independentes.',
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
-                    },
-                    {
-                        id: generateId(),
-                        name: 'Maria Oliveira',
-                        role: 'cinematographer',
-                        email: 'maria.oliveira@exemplo.com',
-                        phone: '(11) 91234-5678',
-                        skills: 'Fotografia, Iluminação, Composição',
-                        availability: 'busy',
-                        notes: 'Experiência em produções cinematográficas e comerciais de grande porte.',
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
-                    },
-                    {
-                        id: generateId(),
-                        name: 'Carlos Santos',
-                        role: 'editor',
-                        email: 'carlos.santos@exemplo.com',
-                        phone: '(11) 99876-5432',
-                        skills: 'Edição, Correção de Cor, Motion Graphics',
-                        availability: 'available',
-                        notes: 'Especializado em Premiere Pro e After Effects.',
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
-                    },
-                    {
-                        id: generateId(),
-                        name: 'Ana Souza',
-                        role: 'producer',
-                        email: 'ana.souza@exemplo.com',
-                        phone: '(11) 98877-6655',
-                        skills: 'Produção, Logística, Orçamento',
-                        availability: 'unavailable',
-                        notes: 'Mais de 10 anos de experiência em gestão de produções audiovisuais.',
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
-                    },
-                    {
-                        id: generateId(),
-                        name: 'Pedro Mendes',
-                        role: 'sound',
-                        email: 'pedro.mendes@exemplo.com',
-                        phone: '(11) 97788-9900',
-                        skills: 'Captação de Som, Mixagem, Sound Design',
-                        availability: 'available',
-                        notes: 'Especialista em captação em locações externas e condições adversas.',
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
-                    },
-                    {
-                        id: generateId(),
-                        name: 'Luciana Costa',
-                        role: 'assistant',
-                        email: 'luciana.costa@exemplo.com',
-                        phone: '(11) 96655-4433',
-                        skills: 'Organização, Assistência de Produção',
-                        availability: 'busy',
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
-                    }
-                ];
+            document.getElementById('total-members').textContent = totalMembers;
+            document.getElementById('active-members').textContent = availableMembers;
+            document.getElementById('active-projects').textContent = activeProjects;
+            document.getElementById('upcoming-events').textContent = upcomingEvents;
+        }
+        
+        // Atualizar estatísticas quando houver mudanças
+        const originalAddMember = TeamManager.addMember;
+        TeamManager.addMember = function(...args) {
+            const result = originalAddMember.apply(this, args);
+            updateStats();
+            return result;
+        };
+        
+        const originalUpdateMember = TeamManager.updateMember;
+        TeamManager.updateMember = function(...args) {
+            const result = originalUpdateMember.apply(this, args);
+            updateStats();
+            return result;
+        };
+        
+        const originalDeleteMember = TeamManager.deleteMember;
+        TeamManager.deleteMember = function(...args) {
+            const result = originalDeleteMember.apply(this, args);
+            updateStats();
+            return result;
+        };
+        
+        // Inicializar estatísticas
+        document.addEventListener('DOMContentLoaded', () => {
+            updateStats();
+        });
+
+        // Variáveis globais
+        let tags = [];
+        const tagsContainer = document.querySelector('.tags-container');
+
+        // Funções do Modal
+        function openModal() {
+            document.getElementById('addMemberModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('addMemberModal').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        // Gerenciamento de Tags
+        document.getElementById('tagInput')?.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const tag = this.value.trim();
                 
-                team = sampleMembers;
-                localStorage.setItem('team', JSON.stringify(team));
-                renderTeam();
+                if (tag && !tags.includes(tag)) {
+                    tags.push(tag);
+                    renderTags();
+                }
+                
+                this.value = '';
+            }
+        });
+
+        function renderTags() {
+            tagsContainer.innerHTML = tags.map(tag => `
+                <div class="tag">
+                    ${tag}
+                    <i class="ri-close-line" onclick="removeTag('${tag}')"></i>
+                </div>
+            `).join('');
+        }
+
+        function removeTag(tag) {
+            tags = tags.filter(t => t !== tag);
+            renderTags();
+        }
+
+        // Preview de Imagem
+        document.getElementById('profilePhoto')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.querySelector('.upload-preview').innerHTML = `
+                        <img src="${e.target.result}" alt="Preview" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    `;
+                };
+                reader.readAsDataURL(file);
             }
         });
     </script>
