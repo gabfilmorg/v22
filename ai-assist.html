@@ -1,0 +1,3126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>filmORG - AI Assist</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Cores Base - Esquema Futurista */
+            --deep-space: #1A1B2E;
+            --neon-blue: #00F5FF;
+            --neon-purple: #B15EFF;
+            --cyber-green: #00FFB2;
+            --cyber-yellow: #FFD60A;
+            --cyber-red: #FF5E5E;
+            --soft-white: #F4F7FF;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            
+            /* Gradientes */
+            --gradient-primary: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            --gradient-success: linear-gradient(135deg, var(--cyber-green), var(--neon-blue));
+            --gradient-warning: linear-gradient(135deg, var(--cyber-yellow), var(--neon-purple));
+            --gradient-danger: linear-gradient(135deg, var(--cyber-red), var(--neon-purple));
+
+            /* Animações */
+            --typing-speed: 15s;
+            --blink-speed: 0.5s;
+            
+            /* Efeitos */
+            --glass-blur: blur(10px);
+            --neon-shadow: 0 0 15px rgba(0, 245, 255, 0.5);
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            
+            /* Dimensões */
+            --sidebar-width: 80px;
+            --sidebar-width-expanded: 240px;
+            --header-height: 70px;
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--deep-space);
+            color: var(--soft-white);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 245, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(177, 94, 255, 0.1) 0%, transparent 20%);
+            background-attachment: fixed;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-right: 1px solid var(--glass-border);
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar:hover {
+            width: var(--sidebar-width-expanded);
+        }
+
+        .sidebar-logo {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: var(--header-height);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            margin-left: 15px;
+            font-size: 20px;
+            color: var(--neon-blue);
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 3px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .file-meta {
+            font-size: 12px;
+            color: rgba(244, 247, 255, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-remove {
+            background: none;
+            border: none;
+            color: rgba(244, 247, 255, 0.6);
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .file-remove:hover {
+            color: var(--cyber-red);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--deep-space);
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--card-shadow);
+            animation: scale-up 0.3s ease;
+        }
+
+        @keyframes scale-up {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--soft-white);
+            font-size: 24px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-section {
+            margin-bottom: 20px;
+        }
+
+        .modal-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--neon-blue);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Onboarding Carousel */
+        .onboarding-carousel {
+            padding: 20px;
+            position: relative;
+        }
+
+        .carousel-slide {
+            text-align: center;
+            display: none;
+            animation: fade 0.5s ease;
+        }
+
+        .carousel-slide.active {
+            display: block;
+        }
+
+        @keyframes fade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .carousel-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--neon-blue);
+        }
+
+        .carousel-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .carousel-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: rgba(244, 247, 255, 0.8);
+            margin-bottom: 20px;
+        }
+
+        .carousel-bullets {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .carousel-bullet {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .carousel-bullet.active {
+            background: var(--neon-blue);
+        }
+
+        .carousel-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        /* Settings Panel Styles */
+        .settings-section {
+            margin-bottom: 20px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .setting-label {
+            font-size: 14px;
+        }
+
+        .setting-value {
+            font-size: 14px;
+            color: var(--neon-blue);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--neon-blue);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+        
+        /* Loading animation for large operations */
+        .loading-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 27, 46, 0.9);
+            backdrop-filter: var(--glass-blur);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .loading-screen.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(0, 245, 255, 0.2);
+            border-top: 3px solid var(--neon-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .loading-subtext {
+            font-size: 14px;
+            color: rgba(244, 247, 255, 0.7);
+        }
+
+        /* Advanced code snippets */
+        .code-block {
+            position: relative;
+            margin: 15px 0;
+        }
+
+        .code-lang {
+            position: absolute;
+            top: 0;
+            right: 10px;
+            font-size: 12px;
+            color: rgba(244, 247, 255, 0.5);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 8px;
+            border-radius: 0 0 5px 5px;
+        }
+
+        .code-tools {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .code-tool {
+            background: rgba(0, 0, 0, 0.4);
+            border: none;
+            color: rgba(244, 247, 255, 0.7);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .code-tool:hover {
+            background: rgba(0, 245, 255, 0.2);
+            color: var(--soft-white);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 245, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 245, 255, 0.5);
+        }
+
+        /* Responsividade */
+        @media (max-width: 1024px) {
+            .ai-container {
+                grid-template-columns: 1fr;
+            }
+
+            .ai-features {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 280px;
+                z-index: 1001;
+            }
+
+            .ai-features.show {
+                display: flex;
+            }
+
+            .mobile-sidebar-toggle {
+                display: block;
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                background: var(--gradient-primary);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: var(--card-shadow);
+                z-index: 1000;
+                cursor: pointer;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+            }
+
+            .sidebar.show {
+                width: var(--sidebar-width-expanded);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .input-toolbar {
+                overflow-x: auto;
+                padding-bottom: 8px;
+            }
+            
+            .chat-header {
+                flex-wrap: wrap;
+            }
+            
+            .chat-tools {
+                margin-left: 0;
+                margin-top: 10px;
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon">F</div>
+            <div class="logo-text">filmORG</div>
+        </div>
+        
+        <nav class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item">
+                <i class="menu-icon ri-dashboard-line"></i>
+                <span class="menu-text">Dashboard</span>
+            </a>
+            <a href="projetos.html" class="menu-item">
+                <i class="menu-icon ri-movie-line"></i>
+                <span class="menu-text">Projetos</span>
+            </a>
+            <a href="equipe.html" class="menu-item">
+                <i class="menu-icon ri-team-line"></i>
+                <span class="menu-text">Equipe</span>
+            </a>
+            <a href="equipamentos.html" class="menu-item">
+                <i class="menu-icon ri-camera-line"></i>
+                <span class="menu-text">Equipamentos</span>
+            </a>
+            <a href="ai-assist.html" class="menu-item active">
+                <i class="menu-icon ri-robot-line"></i>
+                <span class="menu-text">AI Assist</span>
+            </a>
+            <a href="analytics.html" class="menu-item">
+                <i class="menu-icon ri-bar-chart-line"></i>
+                <span class="menu-text">Analytics</span>
+            </a>
+            <a href="agenda.html" class="menu-item">
+                <i class="menu-icon ri-calendar-line"></i>
+                <span class="menu-text">Agenda</span>
+            </a>
+            <a href="orcamento.html" class="menu-item">
+                <i class="menu-icon ri-money-dollar-circle-line"></i>
+                <span class="menu-text">Orçamento</span>
+            </a>
+            <a href="configuracoes.html" class="menu-item" style="margin-top: auto;">
+                <i class="menu-icon ri-settings-line"></i>
+                <span class="menu-text">Configurações</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h1 class="page-title">AI Assist</h1>
+            
+            <div class="header-actions">
+                <div class="notification-btn">
+                    <i class="ri-notification-3-line"></i>
+                    <div class="notification-badge">3</div>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar" id="user-initial">U</div>
+                    <span class="user-name" id="user-name">Usuário</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="ai-container">
+            <!-- AI Assistant Sidebar -->
+            <div class="ai-features">
+                <h3 class="feature-title">
+                    <i class="ri-robot-line"></i>
+                    Assistente IA
+                </h3>
+                
+                <!-- AI Model Selector -->
+                <div class="ai-models">
+                    <div class="model-selector">
+                        <div class="setting-item">
+                            <span class="setting-label">Modo Escuro</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="dark-mode" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4 class="modal-section-title">
+                        <i class="ri-save-line"></i>
+                        Memória e Armazenamento
+                    </h4>
+                    
+                    <div class="settings-section">
+                        <div class="setting-item">
+                            <span class="setting-label">Salvar Histórico</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="save-history" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <span class="setting-label">Sincronizar com Projetos</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="sync-projects" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="reset-settings">Restaurar Padrões</button>
+                <button class="btn btn-primary" id="save-settings">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ===== ELEMENTOS DOM =====
+            // Elementos do chat
+            const chatMessages = document.getElementById('chat-messages');
+            const chatInputField = document.getElementById('chat-input-field');
+            const sendBtn = document.getElementById('send-btn');
+            const clearChatBtn = document.getElementById('clear-chat');
+            const exportChatBtn = document.getElementById('export-chat');
+            const attachFileBtn = document.getElementById('attach-file');
+            const fileInput = document.getElementById('file-input');
+            const fileUploadPreview = document.getElementById('file-upload-preview');
+            const voiceInputBtn = document.getElementById('voice-input');
+            const voiceTooltip = document.getElementById('voice-tooltip');
+            const voiceCancelBtn = document.getElementById('voice-cancel');
+            const contextContainer = document.getElementById('context-container');
+            const suggestedPrompts = document.getElementById('suggested-prompts');
+            const promptChips = document.querySelectorAll('.prompt-chip');
+            const loadingScreen = document.getElementById('loading-screen');
+            
+            // Elementos da sidebar
+            const aiFeatures = document.querySelector('.ai-features');
+            const featureItems = document.querySelectorAll('.feature-item');
+            const modelOptions = document.querySelectorAll('.model-option');
+            const modelSlider = document.querySelector('.model-slider');
+            const toggleSidebarBtn = document.getElementById('toggle-sidebar');
+            const mobileSidebarToggle = document.getElementById('mobile-toggle');
+            const projectList = document.getElementById('project-list');
+            
+            // Elementos do modal de onboarding
+            const onboardingModal = document.getElementById('onboarding-modal');
+            const showOnboardingBtn = document.getElementById('show-onboarding');
+            const closeOnboardingBtn = document.getElementById('close-onboarding');
+            const carouselSlides = document.querySelectorAll('.carousel-slide');
+            const carouselBullets = document.querySelectorAll('.carousel-bullet');
+            const prevSlideBtn = document.getElementById('prev-slide');
+            const nextSlideBtn = document.getElementById('next-slide');
+            
+            // Elementos do modal de configurações
+            const settingsModal = document.getElementById('settings-modal');
+            const showSettingsBtn = document.getElementById('show-settings');
+            const closeSettingsBtn = document.getElementById('close-settings');
+            const saveSettingsBtn = document.getElementById('save-settings');
+            const resetSettingsBtn = document.getElementById('reset-settings');
+            
+            // Elementos de formatação
+            const formatBtns = document.querySelectorAll('.format-btn');
+            
+            // Verificar usuário logado
+            const userInitialEl = document.getElementById('user-initial');
+            const userNameEl = document.getElementById('user-name');
+            const userEmail = localStorage.getItem('userEmail');
+            
+            if (userEmail) {
+                const initial = userEmail.charAt(0).toUpperCase();
+                userInitialEl.textContent = initial;
+                
+                // Obter nome do usuário
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const user = users.find(u => u.email === userEmail);
+                if (user && user.name) {
+                    const firstName = user.name.split(' ')[0];
+                    userNameEl.textContent = firstName;
+                } else {
+                    userNameEl.textContent = userEmail.split('@')[0];
+                }
+            }
+            
+            // ===== ESTADO DA APLICAÇÃO =====
+            // Dados de conversa
+            let messages = JSON.parse(localStorage.getItem('ai_messages')) || [];
+            let currentFeature = 'creative';
+            let currentModel = 'balanced';
+            let isTyping = false;
+            let isRecording = false;
+            let currentSlide = 1;
+            let fileAttachments = [];
+            let projects = JSON.parse(localStorage.getItem('projects')) || [];
+            
+            // Configurações
+            let settings = JSON.parse(localStorage.getItem('ai_settings')) || {
+                thinkingMode: false,
+                includeReferences: true,
+                contextSuggestions: true,
+                showSuggestions: true,
+                showAnimations: true,
+                darkMode: true,
+                saveHistory: true,
+                syncProjects: true
+            };
+            
+            // Respostas pré-definidas do assistente de IA
+            // Na vida real, essas respostas viriam de uma IA real como GPT-4, Claude ou similar
+            const aiResponses = {
+                greeting: "Olá! Sou seu Assistente de Produção. Como posso ajudar com seu projeto hoje?",
+                creative: "Aqui estão algumas ideias criativas para seu próximo projeto:<br><br>1. <b>Documentário Interativo</b>: Combine elementos de documentário tradicional com experiências interativas que permitem ao espectador escolher diferentes perspectivas.<br><br>2. <b>Time-lapse Urbano</b>: Capture o ritmo da cidade com uma série de time-lapses conectados por uma narrativa sobre transformação urbana.<br><br>3. <b>Narrativa em Split-screen</b>: Conte histórias paralelas em tela dividida, mostrando diferentes ângulos da mesma situação.",
+                script: "Analisando seu roteiro, sugiro:<br><br>1. O diálogo na página 15 pode ser mais sucinto para aumentar o impacto<br>2. A cena de transição na página 22 poderia mostrar em vez de contar a mudança emocional do personagem<br>3. Considere inverter a ordem das cenas 4 e 5 para criar mais tensão<br>4. As rubricas podem incluir mais detalhes sensoriais para guiar a equipe",
+                shot: "Para sua cena atual, sugiro a seguinte lista de planos:<br><br>1. Plano geral de estabelecimento para contextualizar a locação<br>2. Plano médio para a conversa principal<br>3. Close nos rostos durante momentos emocionais<br>4. Plano detalhe dos objetos significativos<br>5. Plano de reação dos personagens secundários<br>6. Plano sequência final para acompanhar a saída do personagem",
+                location: "Analisando a locação descrita, observe os seguintes pontos:<br><br>1. <b>Direção da luz</b>: O sol vai criar contraluz forte pela manhã, ideal para silhuetas<br>2. <b>Acústica</b>: O espaço aberto vai requerer proteção contra vento nos microfones<br>3. <b>Logística</b>: Verifique pontos de energia e acesso para equipamentos pesados<br>4. <b>Alternativas</b>: Tenha um plano B para caso de chuva, como o galpão próximo",
+                equipment: "Com base no seu projeto atual, recomendo:<br><br>1. <b>Câmera principal</b>: Sony FX6 oferece excelente performance em baixa luz para as cenas noturnas<br>2. <b>Lentes</b>: Conjunto de lentes prime para maior controle criativo (24mm, 35mm, 50mm, 85mm)<br>3. <b>Áudio</b>: Shotgun direcional Rode NTG5 e kit de lapelas sem fio para as entrevistas<br>4. <b>Iluminação</b>: Kit LED Aputure com modificadores para maior versatilidade",
+                budget: "Para otimizar seu orçamento, recomendo:<br><br>1. Consolidar diárias de filmagem em locações próximas<br>2. Priorizar equipamentos essenciais e considerar alugar itens especializados apenas quando necessário<br>3. Solicitar descontos para aluguéis de longa duração<br>4. Reduzir o tamanho da equipe em dias de menor complexidade",
+                schedule: "Analisando sua agenda atual, vejo oportunidades para otimização:<br><br>1. Reagrupar as filmagens externas para reduzir deslocamentos<br>2. Reservar mais tempo para locações complexas como a cena noturna na ponte<br>3. Programar a gravação das entrevistas em sequência para manter a continuidade",
+                thinking: "Analisando sua requisição, estou considerando vários fatores:<br><br>1. Vamos primeiro avaliar o tipo de narrativa que você deseja criar para esse projeto<br>2. Considerando o público-alvo e os objetivos, precisamos definir a estética visual<br>3. As restrições técnicas e orçamentárias serão importantes para sugerir soluções viáveis<br>4. Existem referências relevantes no cinema contemporâneo que podem servir de inspiração<br><br>Com base nessa análise, posso agora oferecer sugestões mais precisas..."
+            };
+            
+            // ===== FUNÇÕES AUXILIARES =====
+            // Formatar hora
+            function formatTime(date) {
+                return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            }
+            
+            // Gerar um ID único
+            function generateId() {
+                return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
+            }
+            
+            // Atualizar modelos de IA com base na seleção
+            function updateModel(model) {
+                currentModel = model;
+                
+                // Atualizar classes
+                modelOptions.forEach(option => {
+                    if (option.dataset.model === model) {
+                        option.classList.add('active');
+                    } else {
+                        option.classList.remove('active');
+                    }
+                });
+                
+                // Mover o slider
+                modelSlider.className = `model-slider ${model}`;
+                
+                // Salvar a preferência
+                localStorage.setItem('ai_model', model);
+            }
+            
+            // Obter nome do modelo para exibição
+            function getModelName(model) {
+                const models = {
+                    balanced: 'Equilibrado',
+                    creative: 'Criativo',
+                    precise: 'Preciso'
+                };
+                return models[model] || 'Equilibrado';
+            }
+            
+            // ===== MANIPULAÇÃO DO CHAT =====
+            // Adicionar mensagem ao chat
+            function addMessage(sender, content, thinking = false) {
+                const messageId = generateId();
+                const now = new Date();
+                
+                // Criar elemento de mensagem
+                const messageEl = document.createElement('div');
+                messageEl.className = `message ${sender}`;
+                messageEl.dataset.id = messageId;
+                
+                let messageHTML = `
+                    <div class="message-bubble">
+                        ${content}
+                    </div>
+                    <div class="message-meta">
+                        <span>${formatTime(now)}</span>
+                `;
+                
+                if (sender === 'ai') {
+                    messageHTML += `
+                        <div class="message-actions">
+                            <button class="message-action copy-message" title="Copiar" data-id="${messageId}">
+                                <i class="ri-clipboard-line"></i>
+                            </button>
+                            <button class="message-action regenerate-message" title="Regenerar" data-id="${messageId}">
+                                <i class="ri-refresh-line"></i>
+                            </button>
+                        </div>
+                    `;
+                }
+                
+                messageHTML += `</div>`;
+                messageEl.innerHTML = messageHTML;
+                
+                chatMessages.appendChild(messageEl);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Salvar mensagem no histórico se não for do tipo "thinking"
+                if (!thinking) {
+                    const messageObj = {
+                        id: messageId,
+                        sender,
+                        content,
+                        timestamp: now.toISOString(),
+                        feature: currentFeature,
+                        model: currentModel
+                    };
+                    
+                    messages.push(messageObj);
+                    
+                    if (settings.saveHistory) {
+                        localStorage.setItem('ai_messages', JSON.stringify(messages));
+                    }
+                }
+                
+                return messageId;
+            }
+            
+            // Mostrar indicador de digitação
+            function showTypingIndicator() {
+                if (isTyping) return;
+                
+                isTyping = true;
+                const indicator = document.createElement('div');
+                indicator.className = 'typing-indicator';
+                indicator.innerHTML = `
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                `;
+                indicator.id = 'typing-indicator';
+                
+                chatMessages.appendChild(indicator);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Esconder indicador de digitação
+            function hideTypingIndicator() {
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) {
+                    indicator.remove();
+                }
+                isTyping = false;
+            }
+            
+            // Obter resposta da IA com base no tipo de assistente selecionado
+            function getAIResponse(message, feature) {
+                showTypingIndicator();
+                
+                // Adicionar card de "pensando" se o modo de raciocínio estiver ativo
+                let thinkingId;
+                if (settings.thinkingMode) {
+                    const thinkingHTML = `
+                        <div class="ai-thinking">
+                            <div class="thinking-glow"></div>
+                            <div class="thinking-content">
+                                <div class="thinking-title">
+                                    <i class="ri-bubble-chart-line"></i>
+                                    Processando...
+                                </div>
+                                <div class="thinking-text">
+                                    ${aiResponses.thinking}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    thinkingId = addMessage('ai', thinkingHTML, true);
+                }
+                
+                // Simular atraso como se a IA estivesse realmente pensando
+                const delay = settings.thinkingMode ? 3000 : 1500;
+                
+                // Simular uma resposta adaptada ao contexto
+                setTimeout(() => {
+                    // Remover a mensagem de "pensando" se existir
+                    if (settings.thinkingMode) {
+                        const thinkingMessage = document.querySelector(`.message[data-id="${thinkingId}"]`);
+                        if (thinkingMessage) {
+                            thinkingMessage.remove();
+                        }
+                    }
+                    
+                    hideTypingIndicator();
+                    
+                    // Obter resposta com base no tipo de recurso selecionado
+                    let response = aiResponses[feature] || aiResponses.greeting;
+                    
+                    // Adicionar footnote com referências se a configuração estiver ativa
+                    if (settings.includeReferences) {
+                        response += `
+                            <div style="margin-top: 15px; font-size: 12px; color: rgba(244, 247, 255, 0.6); border-top: 1px solid var(--glass-border); padding-top: 10px;">
+                                <i class="ri-information-line"></i> Referências: Cinematography Theory (2023), Advanced Production Techniques, Film Director's Handbook
+                            </div>
+                        `;
+                    }
+                    
+                    // Adicionar contexto sobre o modelo utilizado
+                    if (currentModel !== 'balanced') {
+                        response = `<div style="margin-bottom: 10px; font-size: 12px; color: var(--neon-blue); background: rgba(0, 245, 255, 0.05); padding: 5px 10px; border-radius: 5px; display: inline-block;">
+                            <i class="ri-cpu-line"></i> Usando modo ${getModelName(currentModel)}
+                        </div><br>` + response;
+                    }
+                    
+                    // Adicionar a mensagem
+                    addMessage('ai', response);
+                    
+                    // Adicionar chips de sugestão contextuais se a configuração estiver ativa
+                    if (settings.contextSuggestions) {
+                        updateSuggestedPrompts(feature);
+                    }
+                }, delay);
+            }
+            
+            // Atualizar chips de sugestão com base no contexto
+            function updateSuggestedPrompts(feature) {
+                // Somente mostrar se a configuração estiver ativa
+                if (!settings.showSuggestions) {
+                    suggestedPrompts.style.display = 'none';
+                    return;
+                }
+                
+                const promptsContainer = document.querySelector('.prompt-chips');
+                promptsContainer.innerHTML = '';
+                
+                // Sugestões contextuais com base no recurso atual
+                let contextualPrompts = [];
+                
+                switch (feature) {
+                    case 'creative':
+                        contextualPrompts = [
+                            "Gere ideias visuais para uma cena de perseguição",
+                            "Sugestões para uma abertura impactante",
+                            "Como criar uma metáfora visual para solidão?",
+                            "Técnicas de narrativa não-linear"
+                        ];
+                        break;
+                    case 'script':
+                        contextualPrompts = [
+                            "Como melhorar o arco do personagem principal?",
+                            "Técnicas para diálogos mais naturais",
+                            "Estrutura para um filme de suspense",
+                            "Dicas para escrever cenas de ação"
+                        ];
+                        break;
+                    case 'shot':
+                        contextualPrompts = [
+                            "Decupagem para diálogo entre 3 personagens",
+                            "Planos para uma cena emocional",
+                            "Sugestões de enquadramento para locação externa",
+                            "Como planejar um plano-sequência"
+                        ];
+                        break;
+                    case 'location':
+                        contextualPrompts = [
+                            "Checklist para avaliação de locação externa",
+                            "Como lidar com acústica problemática",
+                            "Dicas para iluminação em espaços pequenos",
+                            "Soluções para locação com muita luz natural"
+                        ];
+                        break;
+                    case 'equipment':
+                        contextualPrompts = [
+                            "Melhor kit de lentes para cenas noturnas",
+                            "Equipamento para filmagem com pouca equipe",
+                            "Opções econômicas para iluminação de entrevista",
+                            "Stabilizers versus Steadicam: prós e contras"
+                        ];
+                        break;
+                    case 'budget':
+                        contextualPrompts = [
+                            "Como reduzir custos de pós-produção",
+                            "Modelo de orçamento para documentário",
+                            "Alocação ideal de recursos para curta-metragem",
+                            "Economizar em equipamentos sem perder qualidade"
+                        ];
+                        break;
+                    case 'schedule':
+                        contextualPrompts = [
+                            "Planejar filmagem de 3 dias com eficiência",
+                            "Como lidar com atrasos no cronograma",
+                            "Template de programação diária",
+                            "Otimizar ordem de filmagem para múltiplas locações"
+                        ];
+                        break;
+                    default:
+                        contextualPrompts = [
+                            "Preciso de ideias para um curta-metragem",
+                            "Como otimizar iluminação para uma cena noturna?",
+                            "Sugestão de cronograma para filmagem de 3 dias",
+                            "Ajude com orçamento para documentário"
+                        ];
+                }
+                
+                // Adicionar os novos chips
+                contextualPrompts.forEach(prompt => {
+                    const chip = document.createElement('div');
+                    chip.className = 'prompt-chip';
+                    chip.textContent = prompt;
+                    chip.addEventListener('click', () => {
+                        chatInputField.value = prompt;
+                        sendMessage();
+                    });
+                    promptsContainer.appendChild(chip);
+                });
+                
+                // Mostrar a seção
+                suggestedPrompts.style.display = 'block';
+            }
+            
+            // Enviar mensagem
+            function sendMessage() {
+                const message = chatInputField.value.trim();
+                
+                if (!message && fileAttachments.length === 0) return;
+                
+                // Adicionar mensagem do usuário
+                if (message) {
+                    addMessage('user', message);
+                }
+                
+                // Adicionar arquivos anexados, se houver
+                if (fileAttachments.length > 0) {
+                    let filesSummary = "Arquivos enviados: ";
+                    fileAttachments.forEach(file => {
+                        filesSummary += file.name + ", ";
+                    });
+                    filesSummary = filesSummary.slice(0, -2);
+                    
+                    // Se não houver mensagem, incluir apenas os arquivos
+                    if (!message) {
+                        addMessage('user', filesSummary);
+                    }
+                    
+                    // Limpar a lista de arquivos
+                    fileAttachments = [];
+                    fileUploadPreview.innerHTML = '';
+                }
+                
+                // Limpar campo de input
+                chatInputField.value = '';
+                chatInputField.style.height = 'auto';
+                
+                // Esconder chips de sugestão após enviar
+                suggestedPrompts.style.display = 'none';
+                
+                // Obter resposta da IA
+                getAIResponse(message, currentFeature);
+            }
+            
+            // Limpar histórico de chat
+            function clearChat() {
+                if (confirm('Tem certeza que deseja limpar todo o histórico de conversa?')) {
+                    chatMessages.innerHTML = '';
+                    messages = [];
+                    localStorage.removeItem('ai_messages');
+                    
+                    // Adicionar mensagem de boas-vindas
+                    addMessage('ai', aiResponses.greeting);
+                }
+            }
+            
+            // Exportar conversa
+            function exportConversation() {
+                // Criar texto formatado da conversa
+                let conversationText = "# Conversa com AI Assist - filmORG\n\n";
+                conversationText += `Data: ${new Date().toLocaleDateString()}\n\n`;
+                
+                messages.forEach(msg => {
+                    const sender = msg.sender === 'user' ? 'Usuário' : 'AI Assist';
+                    const time = new Date(msg.timestamp).toLocaleTimeString('pt-BR', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    });
+                    
+                    // Remover tags HTML para texto limpo
+                    const content = msg.content.replace(/<[^>]*>?/gm, '');
+                    
+                    conversationText += `## ${sender} (${time})\n${content}\n\n`;
+                });
+                
+                // Criar e baixar o arquivo
+                const blob = new Blob([conversationText], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `ai-assist-conversa-${new Date().toISOString().slice(0, 10)}.txt`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+            
+            // Anexar arquivo
+            function attachFile() {
+                fileInput.click();
+            }
+            
+            // Processar arquivo selecionado
+            function handleFileSelection(e) {
+                const files = e.target.files;
+                if (!files.length) return;
+                
+                // Limitar a 3 arquivos por vez
+                const maxFiles = 3;
+                if (fileAttachments.length + files.length > maxFiles) {
+                    alert(`Você pode anexar no máximo ${maxFiles} arquivos por vez.`);
+                    return;
+                }
+                
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    fileAttachments.push(file);
+                    
+                    // Criar elemento de visualização
+                    const filePreviewEl = document.createElement('div');
+                    filePreviewEl.className = 'file-preview';
+                    filePreviewEl.dataset.name = file.name;
+                    
+                    // Determinar ícone com base no tipo de arquivo
+                    let fileIcon = 'ri-file-line';
+                    if (file.type.includes('image')) {
+                        fileIcon = 'ri-image-line';
+                    } else if (file.type.includes('video')) {
+                        fileIcon = 'ri-video-line';
+                    } else if (file.type.includes('audio')) {
+                        fileIcon = 'ri-file-music-line';
+                    } else if (file.type.includes('pdf')) {
+                        fileIcon = 'ri-file-pdf-line';
+                    } else if (file.type.includes('word') || file.name.endsWith('.doc') || file.name.endsWith('.docx')) {
+                        fileIcon = 'ri-file-word-line';
+                    } else if (file.type.includes('excel') || file.name.endsWith('.xls') || file.name.endsWith('.xlsx')) {
+                        fileIcon = 'ri-file-excel-line';
+                    }
+                    
+                    // Formatar tamanho do arquivo
+                    const sizeInKB = file.size / 1024;
+                    let formattedSize;
+                    if (sizeInKB < 1000) {
+                        formattedSize = `${Math.round(sizeInKB)} KB`;
+                    } else {
+                        formattedSize = `${(sizeInKB / 1024).toFixed(1)} MB`;
+                    }
+                    
+                    filePreviewEl.innerHTML = `
+                        <div class="file-icon">
+                            <i class="${fileIcon}"></i>
+                        </div>
+                        <div class="file-info">
+                            <div class="file-name">${file.name}</div>
+                            <div class="file-meta">
+                                <span>${formattedSize}</span>
+                                <span>${file.type || 'Arquivo'}</span>
+                            </div>
+                        </div>
+                        <button class="file-remove" data-name="${file.name}">
+                            <i class="ri-delete-bin-line"></i>
+                        </button>
+                    `;
+                    
+                    fileUploadPreview.appendChild(filePreviewEl);
+                }
+                
+                // Limpar input para permitir selecionar o mesmo arquivo novamente
+                fileInput.value = '';
+            }
+            
+            // Remover arquivo anexado
+            function removeFile(fileName) {
+                // Remover do array
+                fileAttachments = fileAttachments.filter(file => file.name !== fileName);
+                
+                // Remover da visualização
+                const fileEl = fileUploadPreview.querySelector(`.file-preview[data-name="${fileName}"]`);
+                if (fileEl) {
+                    fileEl.remove();
+                }
+            }
+            
+            // Iniciar entrada de voz
+            function startVoiceInput() {
+                if (!('webkitSpeechRecognition' in window)) {
+                    alert('Desculpe, seu navegador não suporta reconhecimento de voz.');
+                    return;
+                }
+                
+                // Exibir tooltip
+                voiceTooltip.classList.add('show');
+                isRecording = true;
+                
+                // Configurar reconhecimento de voz
+                const recognition = new webkitSpeechRecognition();
+                recognition.lang = 'pt-BR';
+                recognition.continuous = false;
+                recognition.interimResults = true;
+                
+                recognition.onstart = () => {
+                    // Atualizar UI
+                };
+                
+                recognition.onresult = (event) => {
+                    const transcript = Array.from(event.results)
+                        .map(result => result[0])
+                        .map(result => result.transcript)
+                        .join('');
+                    
+                    voiceTooltip.querySelector('.voice-text').textContent = transcript;
+                    chatInputField.value = transcript;
+                };
+                
+                recognition.onerror = (event) => {
+                    console.error('Erro de reconhecimento de voz:', event.error);
+                    stopVoiceInput();
+                };
+                
+                recognition.onend = () => {
+                    if (isRecording) {
+                        voiceTooltip.classList.remove('show');
+                        isRecording = false;
+                        
+                        // Auto-enviar se tiver conteúdo
+                        if (chatInputField.value.trim()) {
+                            sendMessage();
+                        }
+                    }
+                };
+                
+                recognition.start();
+                
+                // Guardar referência para cancelar depois
+                window.currentRecognition = recognition;
+            }
+            
+            // Parar entrada de voz
+            function stopVoiceInput() {
+                if (window.currentRecognition) {
+                    window.currentRecognition.stop();
+                }
+                
+                voiceTooltip.classList.remove('show');
+                isRecording = false;
+            }
+            
+            // Copiar mensagem para a área de transferência
+            function copyMessageToClipboard(messageId) {
+                const message = document.querySelector(`.message[data-id="${messageId}"]`);
+                if (!message) return;
+                
+                const content = message.querySelector('.message-bubble').innerHTML;
+                
+                // Criar elemento temporário para extrair texto sem formatação HTML
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = content;
+                const textContent = tempDiv.textContent || tempDiv.innerText || '';
+                
+                // Uso da API moderna para copiar
+                navigator.clipboard.writeText(textContent)
+                    .then(() => {
+                        // Feedback visual temporário
+                        const copyBtn = message.querySelector('.copy-message');
+                        const originalIcon = copyBtn.innerHTML;
+                        copyBtn.innerHTML = '<i class="ri-check-line"></i>';
+                        
+                        setTimeout(() => {
+                            copyBtn.innerHTML = originalIcon;
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        console.error('Erro ao copiar: ', err);
+                        alert('Não foi possível copiar o texto. Por favor, tente novamente.');
+                    });
+            }
+            
+            // Regenerar mensagem da IA
+            function regenerateMessage(messageId) {
+                // Encontrar a mensagem original do usuário que gerou esta resposta
+                const messageIndex = messages.findIndex(m => m.id === messageId);
+                if (messageIndex === -1) return;
+                
+                // Se for a primeira mensagem, simplesmente regenerar com saudação
+                if (messageIndex === 0) {
+                    getAIResponse('', currentFeature);
+                    return;
+                }
+                
+                // Encontrar a última mensagem do usuário antes desta resposta
+                let userMessageIndex = messageIndex;
+                while (userMessageIndex > 0 && messages[userMessageIndex].sender !== 'user') {
+                    userMessageIndex--;
+                }
+                
+                if (userMessageIndex >= 0 && messages[userMessageIndex].sender === 'user') {
+                    const userMessage = messages[userMessageIndex].content;
+                    
+                    // Remover a mensagem atual da IA
+                    const aiMessage = document.querySelector(`.message[data-id="${messageId}"]`);
+                    if (aiMessage) {
+                        aiMessage.remove();
+                    }
+                    
+                    // Remover do histórico
+                    messages = messages.filter(m => m.id !== messageId);
+                    localStorage.setItem('ai_messages', JSON.stringify(messages));
+                    
+                    // Gerar nova resposta
+                    getAIResponse(userMessage, currentFeature);
+                }
+            }
+            
+            // Atualizar projetos na sidebar
+            function updateProjectList() {
+                projectList.innerHTML = '';
+                
+                if (projects.length === 0) {
+                    const emptyItem = document.createElement('li');
+                    emptyItem.className = 'feature-item';
+                    emptyItem.innerHTML = '<span>Nenhum projeto</span>';
+                    projectList.appendChild(emptyItem);
+                    return;
+                }
+                
+                // Mostrar apenas os 5 projetos mais recentes
+                const recentProjects = [...projects]
+                    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+                    .slice(0, 5);
+                
+                recentProjects.forEach(project => {
+                    const projectItem = document.createElement('li');
+                    projectItem.className = 'feature-item';
+                    projectItem.dataset.project = project.id;
+                    
+                    // Determinar ícone com base no tipo de projeto
+                    let projectIcon = 'ri-folder-line';
+                    if (project.basicInfo) {
+                        switch(project.basicInfo.type) {
+                            case 'documentary':
+                                projectIcon = 'ri-film-line';
+                                break;
+                            case 'photography':
+                                projectIcon = 'ri-camera-line';
+                                break;
+                            case 'shortfilm':
+                                projectIcon = 'ri-movie-line';
+                                break;
+                            case 'commercial':
+                                projectIcon = 'ri-advertisement-line';
+                                break;
+                            case 'corporate':
+                                projectIcon = 'ri-building-line';
+                                break;
+                            case 'event':
+                                projectIcon = 'ri-live-line';
+                                break;
+                        }
+                    }
+                    
+                    projectItem.innerHTML = `
+                        <i class="feature-icon ${projectIcon}"></i>
+                        <span>${project.basicInfo?.title || 'Projeto sem título'}</span>
+                    `;
+                    
+                    projectItem.addEventListener('click', () => {
+                        selectProject(project);
+                    });
+                    
+                    projectList.appendChild(projectItem);
+                });
+            }
+            
+            // Selecionar um projeto para contexto
+            function selectProject(project) {
+                // Criar card de contexto
+                const contextId = 'context-' + generateId();
+                const contextCard = document.createElement('div');
+                contextCard.className = 'context-card';
+                contextCard.id = contextId;
+                
+                contextCard.innerHTML = `
+                    <div class="context-header">
+                        <span>
+                            <i class="ri-information-line"></i>
+                            Contexto: ${project.basicInfo?.title}
+                        </span>
+                        <button class="context-close" data-id="${contextId}">
+                            <i class="ri-close-line"></i>
+                        </button>
+                    </div>
+                    <div class="context-body">
+                        <p><strong>Tipo:</strong> ${project.basicInfo?.type || 'N/A'}</p>
+                        <p><strong>Status:</strong> ${project.basicInfo?.status || 'N/A'}</p>
+                        <p><strong>Descrição:</strong> ${project.basicInfo?.description || 'Sem descrição'}</p>
+                    </div>
+                `;
+                
+                // Adicionar ao container de contexto
+                contextContainer.appendChild(contextCard);
+                
+                // Adicionar mensagem ao chat
+                const message = `Olá! Vou ajudar você com o projeto "${project.basicInfo?.title}". O que você gostaria de saber?`;
+                addMessage('ai', message);
+            }
+            
+            // ===== MANIPULAÇÃO DO CAROUSEL =====
+            // Atualizar slide ativo
+            function updateSlide(slideNumber) {
+                // Verificar limites
+                if (slideNumber < 1) slideNumber = 1;
+                if (slideNumber > carouselSlides.length) slideNumber = carouselSlides.length;
+                
+                currentSlide = slideNumber;
+                
+                // Atualizar slides
+                carouselSlides.forEach(slide => {
+                    slide.classList.remove('active');
+                });
+                document.querySelector(`.carousel-slide[data-slide="${currentSlide}"]`).classList.add('active');
+                
+                // Atualizar bullets
+                carouselBullets.forEach(bullet => {
+                    bullet.classList.remove('active');
+                });
+                document.querySelector(`.carousel-bullet[data-slide="${currentSlide}"]`).classList.add('active');
+                
+                // Atualizar botões de navegação
+                prevSlideBtn.style.visibility = currentSlide === 1 ? 'hidden' : 'visible';
+                
+                if (currentSlide === carouselSlides.length) {
+                    nextSlideBtn.textContent = 'Começar';
+                } else {
+                    nextSlideBtn.textContent = 'Próximo';
+                }
+            }
+            
+            // ===== APLICAR CONFIGURAÇÕES =====
+            // Aplicar configurações salvas
+            function applySettings() {
+                // Aplicar cada configuração
+                document.getElementById('thinking-mode').checked = settings.thinkingMode;
+                document.getElementById('include-references').checked = settings.includeReferences;
+                document.getElementById('context-suggestions').checked = settings.contextSuggestions;
+                document.getElementById('show-suggestions').checked = settings.showSuggestions;
+                document.getElementById('show-animations').checked = settings.showAnimations;
+                document.getElementById('dark-mode').checked = settings.darkMode;
+                document.getElementById('save-history').checked = settings.saveHistory;
+                document.getElementById('sync-projects').checked = settings.syncProjects;
+                
+                // Atualizar a UI com base nas configurações
+                if (!settings.showSuggestions) {
+                    suggestedPrompts.style.display = 'none';
+                }
+                
+                // Não temos uma implementação real do modo escuro, pois todo o tema já é escuro
+                // Em um cenário real, implementaríamos a troca de temas
+            }
+            
+            // Salvar configurações
+            function saveSettingsToStorage() {
+                // Obter valores dos inputs
+                settings = {
+                    thinkingMode: document.getElementById('thinking-mode').checked,
+                    includeReferences: document.getElementById('include-references').checked,
+                    contextSuggestions: document.getElementById('context-suggestions').checked,
+                    showSuggestions: document.getElementById('show-suggestions').checked,
+                    showAnimations: document.getElementById('show-animations').checked,
+                    darkMode: document.getElementById('dark-mode').checked,
+                    saveHistory: document.getElementById('save-history').checked,
+                    syncProjects: document.getElementById('sync-projects').checked
+                };
+                
+                // Salvar no localStorage
+                localStorage.setItem('ai_settings', JSON.stringify(settings));
+                
+                // Aplicar configurações
+                applySettings();
+                
+                // Fechar modal
+                settingsModal.classList.remove('show');
+            }
+            
+            // Restaurar configurações padrão
+            function resetSettingsToDefault() {
+                settings = {
+                    thinkingMode: false,
+                    includeReferences: true,
+                    contextSuggestions: true,
+                    showSuggestions: true,
+                    showAnimations: true,
+                    darkMode: true,
+                    saveHistory: true,
+                    syncProjects: true
+                };
+                
+                // Aplicar ao formulário
+                applySettings();
+            }
+            
+            // ===== EVENT LISTENERS =====
+            // Ajustar altura do textarea
+            chatInputField.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+                
+                // Limitar altura máxima
+                if (this.scrollHeight > 150) {
+                    this.style.height = '150px';
+                }
+            });
+            
+            // Enviar mensagem ao pressionar Enter (sem Shift)
+            chatInputField.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // Enviar mensagem ao clicar no botão
+            sendBtn.addEventListener('click', sendMessage);
+            
+            // Selecionar modo de IA
+            modelOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    updateModel(this.dataset.model);
+                });
+            });
+            
+            // Alternar entre tipos de recurso
+            featureItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remover classe ativa de todos os itens
+                    featureItems.forEach(i => i.classList.remove('active'));
+                    
+                    // Adicionar classe ativa ao item clicado
+                    this.classList.add('active');
+                    
+                    // Atualizar tipo atual
+                    currentFeature = this.dataset.feature;
+                    
+                    // Atualizar sugestões de prompts
+                    updateSuggestedPrompts(currentFeature);
+                    
+                    // Adicionar mensagem de apresentação do recurso
+                    let featureIntro = 'Estou pronto para ajudar com ';
+                    
+                    switch(currentFeature) {
+                        case 'creative':
+                            featureIntro += 'ideias criativas para seu projeto.';
+                            break;
+                        case 'script':
+                            featureIntro += 'análise e sugestões para seu roteiro.';
+                            break;
+                        case 'shot':
+                            featureIntro += 'sugestões de planos e decupagem.';
+                            break;
+                        case 'location':
+                            featureIntro += 'análise de locações e considerações técnicas.';
+                            break;
+                        case 'equipment':
+                            featureIntro += 'recomendações de equipamentos para seu projeto.';
+                            break;
+                        case 'budget':
+                            featureIntro += 'otimização de orçamento e alocação de recursos.';
+                            break;
+                        case 'schedule':
+                            featureIntro += 'planejamento e otimização de cronograma.';
+                            break;
+                        default:
+                            featureIntro += 'qualquer dúvida sobre seu projeto.';
+                    }
+                    
+                    addMessage('ai', featureIntro);
+                    
+                    // Em mobile, esconder o sidebar após seleção
+                    if (window.innerWidth <= 1024) {
+                        aiFeatures.classList.remove('show');
+                    }
+                });
+            });
+            
+            // Sugestões de prompt
+            promptChips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    chatInputField.value = this.textContent;
+                    sendMessage();
+                });
+            });
+            
+            // Botão de limpar chat
+            clearChatBtn.addEventListener('click', clearChat);
+            
+            // Botão de exportar chat
+            exportChatBtn.addEventListener('click', exportConversation);
+            
+            // Botão de alternar sidebar
+            toggleSidebarBtn.addEventListener('click', function() {
+                aiFeatures.classList.toggle('show');
+            });
+            
+            // Botão de sidebar mobile
+            if (mobileSidebarToggle) {
+                mobileSidebarToggle.addEventListener('click', function() {
+                    aiFeatures.classList.toggle('show');
+                });
+            }
+            
+            // Anexar arquivo
+            attachFileBtn.addEventListener('click', attachFile);
+            
+            // Processar seleção de arquivo
+            fileInput.addEventListener('change', handleFileSelection);
+            
+            // Remover arquivo
+            fileUploadPreview.addEventListener('click', function(e) {
+                const removeBtn = e.target.closest('.file-remove');
+                if (removeBtn) {
+                    const fileName = removeBtn.dataset.name;
+                    removeFile(fileName);
+                }
+            });
+            
+            // Entrada de voz
+            voiceInputBtn.addEventListener('click', startVoiceInput);
+            voiceCancelBtn.addEventListener('click', stopVoiceInput);
+            
+            // Formatação de texto
+            formatBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const action = this.title.toLowerCase();
+                    let prefix = '', suffix = '';
+                    
+                    switch(action) {
+                        case 'negrito':
+                            prefix = '**';
+                            suffix = '**';
+                            break;
+                        case 'itálico':
+                            prefix = '_';
+                            suffix = '_';
+                            break;
+                        case 'link':
+                            prefix = '[';
+                            suffix = '](url)';
+                            break;
+                        case 'código':
+                            prefix = '`';
+                            suffix = '`';
+                            break;
+                        case 'lista':
+                            prefix = '- ';
+                            suffix = '';
+                            break;
+                    }
+                    
+                    // Obter seleção atual
+                    const start = chatInputField.selectionStart;
+                    const end = chatInputField.selectionEnd;
+                    const selectedText = chatInputField.value.substring(start, end);
+                    const beforeText = chatInputField.value.substring(0, start);
+                    const afterText = chatInputField.value.substring(end);
+                    
+                    // Aplicar formatação
+                    chatInputField.value = beforeText + prefix + selectedText + suffix + afterText;
+                    
+                    // Reposicionar cursor
+                    chatInputField.focus();
+                    
+                    // Se não houver seleção, posicionar entre as tags
+                    if (start === end) {
+                        chatInputField.selectionStart = start + prefix.length;
+                        chatInputField.selectionEnd = start + prefix.length;
+                    } else {
+                        chatInputField.selectionStart = start;
+                        chatInputField.selectionEnd = end + prefix.length + suffix.length;
+                    }
+                });
+            });
+            
+            // Remover card de contexto
+            contextContainer.addEventListener('click', function(e) {
+                const closeBtn = e.target.closest('.context-close');
+                if (closeBtn) {
+                    const cardId = closeBtn.dataset.id;
+                    const card = document.getElementById(cardId);
+                    if (card) {
+                        card.remove();
+                    }
+                }
+            });
+            
+            // Delegação de eventos para ações em mensagens
+            chatMessages.addEventListener('click', function(e) {
+                // Botão de copiar mensagem
+                const copyBtn = e.target.closest('.copy-message');
+                if (copyBtn) {
+                    const messageId = copyBtn.dataset.id;
+                    copyMessageToClipboard(messageId);
+                }
+                
+                // Botão de regenerar mensagem
+                const regenerateBtn = e.target.closest('.regenerate-message');
+                if (regenerateBtn) {
+                    const messageId = regenerateBtn.dataset.id;
+                    regenerateMessage(messageId);
+                }
+            });
+            
+            // Exibir modal de onboarding
+            showOnboardingBtn.addEventListener('click', function() {
+                currentSlide = 1;
+                updateSlide(currentSlide);
+                onboardingModal.classList.add('show');
+            });
+            
+            // Fechar modal de onboarding
+            closeOnboardingBtn.addEventListener('click', function() {
+                onboardingModal.classList.remove('show');
+            });
+            
+            // Navegação do carousel
+            prevSlideBtn.addEventListener('click', function() {
+                updateSlide(currentSlide - 1);
+            });
+            
+            nextSlideBtn.addEventListener('click', function() {
+                if (currentSlide < carouselSlides.length) {
+                    updateSlide(currentSlide + 1);
+                } else {
+                    // Finalizar onboarding
+                    onboardingModal.classList.remove('show');
+                }
+            });
+            
+            // Clique nos bullets do carousel
+            carouselBullets.forEach(bullet => {
+                bullet.addEventListener('click', function() {
+                    updateSlide(parseInt(this.dataset.slide));
+                });
+            });
+            
+            // Mostrar modal de configurações
+            showSettingsBtn.addEventListener('click', function() {
+                applySettings();
+                settingsModal.classList.add('show');
+            });
+            
+            // Fechar modal de configurações
+            closeSettingsBtn.addEventListener('click', function() {
+                settingsModal.classList.remove('show');
+            });
+            
+            // Salvar configurações
+            saveSettingsBtn.addEventListener('click', saveSettingsToStorage);
+            
+            // Restaurar configurações padrão
+            resetSettingsBtn.addEventListener('click', resetSettingsToDefault);
+            
+            // Fechar modais ao clicar fora
+            onboardingModal.addEventListener('click', function(e) {
+                if (e.target === onboardingModal) {
+                    onboardingModal.classList.remove('show');
+                }
+            });
+            
+            settingsModal.addEventListener('click', function(e) {
+                if (e.target === settingsModal) {
+                    settingsModal.classList.remove('show');
+                }
+            });
+            
+            // ===== RESPONSIVIDADE =====
+            // Detectar tamanho da tela e ajustar UI
+            function handleResize() {
+                if (window.innerWidth <= 1024) {
+                    aiFeatures.classList.remove('show');
+                    mobileSidebarToggle.style.display = 'flex';
+                } else {
+                    mobileSidebarToggle.style.display = 'none';
+                }
+            }
+            
+            window.addEventListener('resize', handleResize);
+            
+            // ===== INICIALIZAÇÃO =====
+            // Inicialização
+            function init() {
+                // Verificar preferência de modelo salva
+                const savedModel = localStorage.getItem('ai_model');
+                if (savedModel) {
+                    updateModel(savedModel);
+                }
+                
+                // Aplicar configurações salvas
+                applySettings();
+                
+                // Atualizar lista de projetos
+                updateProjectList();
+                
+                // Verificar tamanho da tela
+                handleResize();
+                
+                // Mostrar mensagem de boas-vindas se não houver mensagens
+                if (messages.length === 0) {
+                    addMessage('ai', aiResponses.greeting);
+                } else {
+                    // Carregar histórico de mensagens
+                    chatMessages.innerHTML = '';
+                    messages.forEach(msg => {
+                        addMessage(msg.sender, msg.content);
+                    });
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+                
+                // Mostrar onboarding para novos usuários
+                if (!localStorage.getItem('onboarding_completed')) {
+                    setTimeout(() => {
+                        onboardingModal.classList.add('show');
+                        localStorage.setItem('onboarding_completed', 'true');
+                    }, 1000);
+                }
+                
+                // Focar no campo de input
+                setTimeout(() => {
+                    chatInputField.focus();
+                }, 500);
+            }
+            
+            // Iniciar aplicação
+            init();
+        });
+    </script>
+</body>
+</html>="model-option balanced active" data-model="balanced">Equilibrado</div>
+                        <div class="model-option creative" data-model="creative">Criativo</div>
+                        <div class="model-option precise" data-model="precise">Preciso</div>
+                        <div class="model-slider balanced"></div>
+                    </div>
+                </div>
+                
+                <ul class="feature-list">
+                    <li class="feature-item active" data-feature="creative">
+                        <i class="feature-icon ri-lightbulb-line"></i>
+                        <span>Ideias Criativas</span>
+                    </li>
+                    <li class="feature-item" data-feature="script">
+                        <i class="feature-icon ri-file-text-line"></i>
+                        <span>Assistente de Roteiro</span>
+                    </li>
+                    <li class="feature-item" data-feature="shot">
+                        <i class="feature-icon ri-movie-line"></i>
+                        <span>Lista de Planos</span>
+                    </li>
+                    <li class="feature-item" data-feature="location">
+                        <i class="feature-icon ri-map-pin-line"></i>
+                        <span>Análise de Locação</span>
+                    </li>
+                    <li class="feature-item" data-feature="equipment">
+                        <i class="feature-icon ri-camera-line"></i>
+                        <span>Sugestões de Equipamentos</span>
+                    </li>
+                    <li class="feature-item" data-feature="budget">
+                        <i class="feature-icon ri-money-dollar-circle-line"></i>
+                        <span>Análise de Orçamento</span>
+                    </li>
+                    <li class="feature-item" data-feature="schedule">
+                        <i class="feature-icon ri-calendar-line"></i>
+                        <span>Otimização de Agenda</span>
+                    </li>
+                </ul>
+                
+                <h3 class="feature-title" style="margin-top: 30px;">
+                    <i class="ri-folder-line"></i>
+                    Projetos
+                </h3>
+                <ul class="feature-list" id="project-list">
+                    <!-- Projetos serão carregados dinamicamente -->
+                </ul>
+                
+                <h3 class="feature-title" style="margin-top: 20px;">
+                    <i class="ri-information-line"></i>
+                    Recursos
+                </h3>
+                
+                <div class="feature-presentation">
+                    <div class="feature-card" id="show-onboarding">
+                        <div class="feature-card-title">
+                            <i class="ri-guide-line"></i>
+                            Tour de Recursos
+                        </div>
+                        <div class="feature-card-text">
+                            Conheça as principais funcionalidades do AI Assist
+                        </div>
+                    </div>
+                    <div class="feature-card" id="show-settings">
+                        <div class="feature-card-title">
+                            <i class="ri-settings-4-line"></i>
+                            Configurações do AI
+                        </div>
+                        <div class="feature-card-text">
+                            Personalize o comportamento do assistente
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chat Interface -->
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="ai-avatar">
+                        <div class="pulse-ring"></div>
+                        <i class="ri-robot-line"></i>
+                    </div>
+                    <div class="ai-info">
+                        <h3>
+                            Assistente de Produção
+                            <span class="verified-badge"><i class="ri-checkbox-circle-fill"></i></span>
+                        </h3>
+                        <p>
+                            <i class="ri-record-circle-fill" style="color: var(--cyber-green); font-size: 10px;"></i>
+                            Online e pronto para ajudar
+                        </p>
+                    </div>
+                    
+                    <div class="chat-tools">
+                        <button class="chat-tool-btn has-tooltip" id="clear-chat">
+                            <i class="ri-delete-bin-line"></i>
+                            <span class="tooltip">Limpar conversa</span>
+                        </button>
+                        <button class="chat-tool-btn has-tooltip" id="export-chat">
+                            <i class="ri-download-line"></i>
+                            <span class="tooltip">Exportar conversa</span>
+                        </button>
+                        <button class="chat-tool-btn has-tooltip" id="toggle-sidebar">
+                            <i class="ri-layout-left-line"></i>
+                            <span class="tooltip">Alternar painel</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="chat-messages" id="chat-messages">
+                    <!-- Mensagens serão adicionadas dinamicamente -->
+                </div>
+                
+                <div class="chat-input-area">
+                    <div id="context-container">
+                        <!-- Context cards serão adicionados dinamicamente quando necessário -->
+                    </div>
+                    
+                    <div id="suggested-prompts" class="suggested-prompts">
+                        <div class="prompt-chips">
+                            <div class="prompt-chip">Preciso de ideias para um curta-metragem</div>
+                            <div class="prompt-chip">Como otimizar iluminação para uma cena noturna?</div>
+                            <div class="prompt-chip">Sugestão de cronograma para filmagem de 3 dias</div>
+                            <div class="prompt-chip">Ajude com orçamento para documentário</div>
+                        </div>
+                    </div>
+                    
+                    <div id="file-upload-preview">
+                        <!-- Aqui aparecerá a pré-visualização de arquivos quando forem anexados -->
+                    </div>
+                    
+                    <div class="input-container">
+                        <div class="input-toolbar">
+                            <div class="formatting-actions">
+                                <button class="format-btn" title="Negrito">
+                                    <i class="ri-bold"></i>
+                                </button>
+                                <button class="format-btn" title="Itálico">
+                                    <i class="ri-italic"></i>
+                                </button>
+                                <button class="format-btn" title="Link">
+                                    <i class="ri-link"></i>
+                                </button>
+                                <button class="format-btn" title="Código">
+                                    <i class="ri-code-line"></i>
+                                </button>
+                                <button class="format-btn" title="Lista">
+                                    <i class="ri-list-check"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <textarea 
+                            class="chat-input-field" 
+                            id="chat-input-field" 
+                            placeholder="Pergunte algo ou digite '/' para comandos..."
+                            rows="1"></textarea>
+                        
+                        <div class="input-actions">
+                            <div class="additional-actions">
+                                <button class="action-btn has-tooltip" id="attach-file">
+                                    <i class="ri-attachment-2"></i>
+                                    <span class="tooltip">Anexar arquivo</span>
+                                </button>
+                                <button class="action-btn has-tooltip" id="voice-input">
+                                    <i class="ri-mic-line"></i>
+                                    <span class="tooltip">Ditado por voz</span>
+                                </button>
+                                <input type="file" id="file-input" style="display: none;">
+                            </div>
+                            
+                            <button class="send-btn" id="send-btn">
+                                <i class="ri-send-plane-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Voice input tooltip -->
+                <div class="voice-tooltip" id="voice-tooltip">
+                    <div class="voice-wave">
+                        <div class="voice-bar"></div>
+                        <div class="voice-bar"></div>
+                        <div class="voice-bar"></div>
+                        <div class="voice-bar"></div>
+                        <div class="voice-bar"></div>
+                        <div class="voice-bar"></div>
+                        <div class="voice-bar"></div>
+                        <div class="voice-bar"></div>
+                        <div class="voice-bar"></div>
+                        <div class="voice-bar"></div>
+                        <div class="voice-bar"></div>
+                        <div class="voice-bar"></div>
+                    </div>
+                    <div class="voice-text">Ouvindo... Fale algo</div>
+                    <button class="voice-cancel" id="voice-cancel">Cancelar</button>
+                </div>
+                
+                <!-- Loading screen -->
+                <div class="loading-screen" id="loading-screen">
+                    <div class="loading-content">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-text">Processando arquivo...</div>
+                        <div class="loading-subtext">Isso pode levar alguns instantes</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile sidebar toggle button -->
+        <div class="mobile-sidebar-toggle" id="mobile-toggle" style="display: none;">
+            <i class="ri-robot-line"></i>
+        </div>
+    </div>
+    
+    <!-- Onboarding Modal -->
+    <div class="modal-overlay" id="onboarding-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Bem-vindo ao AI Assist</h3>
+                <button class="modal-close" id="close-onboarding">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="onboarding-carousel">
+                    <div class="carousel-slide active" data-slide="1">
+                        <div class="carousel-icon">
+                            <i class="ri-robot-line"></i>
+                        </div>
+                        <h3 class="carousel-title">Assistente AI Avançado</h3>
+                        <p class="carousel-text">
+                            O AI Assist foi projetado especificamente para produções audiovisuais, 
+                            oferecendo suporte em todas as etapas do seu projeto com conhecimento especializado.
+                        </p>
+                    </div>
+                    
+                    <div class="carousel-slide" data-slide="2">
+                        <div class="carousel-icon">
+                            <i class="ri-lightbulb-line"></i>
+                        </div>
+                        <h3 class="carousel-title">Ideias Criativas Personalizadas</h3>
+                        <p class="carousel-text">
+                            Obtenha sugestões de conceitos visuais, abordagens narrativas, 
+                            técnicas inovadoras e referências artísticas para impulsionar sua criatividade.
+                        </p>
+                    </div>
+                    
+                    <div class="carousel-slide" data-slide="3">
+                        <div class="carousel-icon">
+                            <i class="ri-file-text-line"></i>
+                        </div>
+                        <h3 class="carousel-title">Assistente de Roteiro Intuitivo</h3>
+                        <p class="carousel-text">
+                            Receba feedback detalhado sobre seu roteiro, com análise de estrutura, 
+                            personagens, diálogos e sugestões para aprimorar sua narrativa.
+                        </p>
+                    </div>
+                    
+                    <div class="carousel-slide" data-slide="4">
+                        <div class="carousel-icon">
+                            <i class="ri-camera-line"></i>
+                        </div>
+                        <h3 class="carousel-title">Sugestões Técnicas Especializadas</h3>
+                        <p class="carousel-text">
+                            Obtenha recomendações de equipamentos, configurações de câmera, 
+                            técnicas de iluminação e direção otimizadas para o seu projeto específico.
+                        </p>
+                    </div>
+                    
+                    <div class="carousel-bullets">
+                        <div class="carousel-bullet active" data-slide="1"></div>
+                        <div class="carousel-bullet" data-slide="2"></div>
+                        <div class="carousel-bullet" data-slide="3"></div>
+                        <div class="carousel-bullet" data-slide="4"></div>
+                    </div>
+                    
+                    <div class="carousel-navigation">
+                        <button class="btn btn-outline" id="prev-slide" style="visibility: hidden;">Anterior</button>
+                        <button class="btn btn-primary" id="next-slide">Próximo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settings-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Configurações do AI Assist</h3>
+                <button class="modal-close" id="close-settings">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4 class="modal-section-title">
+                        <i class="ri-robot-line"></i>
+                        Comportamento do Assistente
+                    </h4>
+                    
+                    <div class="settings-section">
+                        <div class="setting-item">
+                            <span class="setting-label">Modo de Raciocínio</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="thinking-mode">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <span class="setting-label">Incluir Referências</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="include-references" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <span class="setting-label">Sugestões Contextualizadas</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="context-suggestions" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4 class="modal-section-title">
+                        <i class="ri-chat-settings-line"></i>
+                        Interface do Chat
+                    </h4>
+                    
+                    <div class="settings-section">
+                        <div class="setting-item">
+                            <span class="setting-label">Chips de Sugestão</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="show-suggestions" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <span class="setting-label">Animações</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="show-animations" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div classfont-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar:hover .logo-text {
+            opacity: 1;
+        }
+
+        .sidebar-menu {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--soft-white);
+            text-decoration: none;
+        }
+
+        .menu-item:hover {
+            background: var(--glass-bg);
+        }
+
+        .menu-item.active {
+            background: var(--gradient-primary);
+            box-shadow: var(--neon-shadow);
+        }
+
+        .menu-icon {
+            font-size: 20px;
+            min-width: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-text {
+            margin-left: 15px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar:hover .menu-text {
+            opacity: 1;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            min-height: 100vh;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Header */
+        .header {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-btn {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--neon-purple);
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* AI Assistant Container */
+        .ai-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+            height: calc(100vh - var(--header-height) - 40px);
+        }
+
+        /* AI Features Sidebar */
+        .ai-features {
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            max-height: 100%;
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--neon-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .feature-item {
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-item:hover {
+            background: var(--glass-bg);
+        }
+
+        .feature-item.active {
+            background: var(--glass-bg);
+            border-left: 3px solid var(--neon-blue);
+        }
+
+        .feature-icon {
+            font-size: 20px;
+            color: var(--neon-blue);
+        }
+
+        /* AI Models Section */
+        .ai-models {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .model-selector {
+            display: flex;
+            position: relative;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--border-radius);
+            padding: 3px;
+            margin-top: 10px;
+        }
+
+        .model-option {
+            flex: 1;
+            padding: 8px 5px;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 1;
+        }
+
+        .model-option.active {
+            color: var(--deep-space);
+            font-weight: 600;
+        }
+
+        .model-slider {
+            position: absolute;
+            width: calc(100% / 3);
+            height: 85%;
+            border-radius: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 0;
+        }
+
+        .model-slider.balanced {
+            left: 3px;
+            background: var(--neon-blue);
+        }
+
+        .model-slider.creative {
+            left: calc(100% / 3);
+            background: var(--neon-purple);
+        }
+
+        .model-slider.precise {
+            left: calc(100% / 3 * 2);
+            background: var(--cyber-green);
+        }
+
+        /* Chat Container */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .ai-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            position: relative;
+        }
+
+        .ai-avatar::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--cyber-green);
+            border: 2px solid rgba(26, 27, 46, 0.8);
+            bottom: -2px;
+            right: -2px;
+        }
+
+        .ai-avatar .pulse-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: rgba(0, 255, 178, 0.4);
+            opacity: 0;
+            transform: scale(1);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.5);
+            }
+        }
+
+        .ai-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            color: var(--cyber-green);
+            font-size: 14px;
+        }
+
+        .ai-info p {
+            font-size: 12px;
+            color: rgba(244, 247, 255, 0.7);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .chat-tools {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+        }
+
+        .chat-tool-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--soft-white);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chat-tool-btn:hover {
+            background: rgba(0, 245, 255, 0.1);
+            border-color: var(--neon-blue);
+        }
+
+        .chat-tool-btn.has-tooltip {
+            position: relative;
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .chat-tool-btn.has-tooltip:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message {
+            max-width: 85%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            animation: fade-in 0.5s ease;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.ai {
+            align-self: flex-start;
+        }
+
+        .message.user {
+            align-self: flex-end;
+        }
+
+        .message-bubble {
+            padding: 15px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .ai .message-bubble {
+            background: rgba(0, 245, 255, 0.1);
+            border-top-left-radius: 0;
+        }
+
+        .user .message-bubble {
+            background: rgba(177, 94, 255, 0.1);
+            border-top-right-radius: 0;
+        }
+
+        .message-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: rgba(244, 247, 255, 0.6);
+        }
+
+        .ai .message-meta {
+            padding-left: 10px;
+        }
+
+        .user .message-meta {
+            padding-right: 10px;
+            justify-content: flex-end;
+        }
+
+        .message-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .message-action {
+            background: none;
+            border: none;
+            color: rgba(244, 247, 255, 0.6);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 3px;
+            transition: all 0.3s;
+        }
+
+        .message-action:hover {
+            color: var(--neon-blue);
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 10px;
+            align-self: flex-start;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: typing-animation 1s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing-animation {
+            0%, 100% { opacity: 0.6; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-5px); }
+        }
+
+        /* Code block styling */
+        pre {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 10px 0;
+            border-left: 3px solid var(--neon-blue);
+        }
+
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            color: var(--soft-white);
+        }
+
+        /* Enhanced Input Area */
+        .chat-input-area {
+            padding: 15px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .input-container {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+        }
+
+        .input-container:focus-within {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 0 2px rgba(0, 245, 255, 0.2);
+        }
+
+        .input-toolbar {
+            display: flex;
+            padding: 5px 10px;
+        }
+
+        .formatting-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .format-btn {
+            background: none;
+            border: none;
+            color: rgba(244, 247, 255, 0.6);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 3px;
+            transition: all 0.3s;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .format-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--soft-white);
+        }
+
+        .chat-input-field {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--soft-white);
+            padding: 8px 15px;
+            outline: none;
+            resize: none;
+            min-height: 24px;
+            max-height: 120px;
+            overflow-y: auto;
+            font-size: 14px;
+        }
+
+        .input-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 10px;
+        }
+
+        .additional-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: rgba(244, 247, 255, 0.6);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 3px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .action-btn:hover {
+            color: var(--neon-blue);
+        }
+
+        .action-btn span {
+            font-size: 12px;
+        }
+
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--neon-shadow);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Context Cards */
+        .context-card {
+            background: rgba(26, 27, 46, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            animation: slide-up 0.3s ease;
+        }
+
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .context-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--neon-blue);
+        }
+
+        .context-body {
+            font-size: 13px;
+            line-height: 1.5;
+            color: rgba(244, 247, 255, 0.8);
+        }
+
+        .context-close {
+            background: none;
+            border: none;
+            color: rgba(244, 247, 255, 0.6);
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .context-close:hover {
+            color: var(--neon-blue);
+        }
+
+        /* Suggested Prompts */
+        .suggested-prompts {
+            padding: 10px 0;
+        }
+
+        .prompt-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .prompt-chip {
+            background: rgba(0, 245, 255, 0.1);
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--soft-white);
+        }
+
+        .prompt-chip:hover {
+            background: rgba(0, 245, 255, 0.2);
+            border-color: var(--neon-blue);
+        }
+
+        /* Voice Input Tooltip */
+        .voice-tooltip {
+            position: absolute;
+            bottom: 60px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: 20px;
+            padding: 15px;
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .voice-tooltip.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .voice-wave {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+        }
+
+        .voice-bar {
+            width: 4px;
+            height: 10px;
+            background: var(--neon-blue);
+            border-radius: 2px;
+            animation: voice-wave 1s ease-in-out infinite;
+        }
+
+        @keyframes voice-wave {
+            0%, 100% { height: 10px; }
+            50% { height: 30px; }
+        }
+
+        .voice-bar:nth-child(1) { animation-delay: 0.0s; }
+        .voice-bar:nth-child(2) { animation-delay: 0.1s; }
+        .voice-bar:nth-child(3) { animation-delay: 0.2s; }
+        .voice-bar:nth-child(4) { animation-delay: 0.3s; }
+        .voice-bar:nth-child(5) { animation-delay: 0.4s; }
+        .voice-bar:nth-child(6) { animation-delay: 0.5s; }
+        .voice-bar:nth-child(7) { animation-delay: 0.6s; }
+        .voice-bar:nth-child(8) { animation-delay: 0.5s; }
+        .voice-bar:nth-child(9) { animation-delay: 0.4s; }
+        .voice-bar:nth-child(10) { animation-delay: 0.3s; }
+        .voice-bar:nth-child(11) { animation-delay: 0.2s; }
+        .voice-bar:nth-child(12) { animation-delay: 0.1s; }
+
+        .voice-text {
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .voice-cancel {
+            background: var(--gradient-danger);
+            border: none;
+            color: var(--soft-white);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .voice-cancel:hover {
+            transform: scale(1.05);
+        }
+
+        /* Feature Presentation */
+        .feature-presentation {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .feature-card {
+            background: rgba(26, 27, 46, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--neon-shadow);
+            border-color: var(--neon-blue);
+        }
+
+        .feature-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--neon-blue);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-card-text {
+            font-size: 13px;
+            line-height: 1.5;
+            color: rgba(244, 247, 255, 0.8);
+        }
+
+        /* AI Thinking Animation */
+        .ai-thinking {
+            padding: 15px;
+            background: rgba(0, 245, 255, 0.05);
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .thinking-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .thinking-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .thinking-title i {
+            color: var(--neon-blue);
+            animation: pulse-thinking 1.5s infinite;
+        }
+
+        @keyframes pulse-thinking {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .thinking-text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: rgba(244, 247, 255, 0.8);
+        }
+
+        .thinking-glow {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            top: 0;
+            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.1), transparent);
+            animation: thinking-glow 2s infinite;
+        }
+
+        @keyframes thinking-glow {
+            0% { left: -50%; }
+            100% { left: 100%; }
+        }
+
+        /* File Upload Preview */
+        .file-preview {
+            background: rgba(26, 27, 46, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 10px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--border-radius);
+            background: rgba(0, 245, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            
